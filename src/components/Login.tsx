@@ -20,7 +20,7 @@ export function Login() {
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const result = login(username, password);
-    
+
     if (!result.success) {
       setError(result.message);
       setIsLoading(false);
@@ -132,14 +132,14 @@ export function Login() {
           {/* Info box */}
           <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
             <p className="text-violet-200 text-sm text-center mb-2">
-              <strong>Credenciais de teste:</strong>
+              <strong>Credenciais:</strong>
             </p>
             <div className="space-y-1 text-center text-sm">
               <p className="text-violet-300">
-                Admin: <code className="bg-white/10 px-2 py-0.5 rounded">admin</code> / <code className="bg-white/10 px-2 py-0.5 rounded">admin123</code>
+                <code className="bg-white/10 px-2 py-0.5 rounded">vytor</code> ou <code className="bg-white/10 px-2 py-0.5 rounded">kaian</code> / <code className="bg-white/10 px-2 py-0.5 rounded">1234</code>
               </p>
-              <p className="text-violet-300">
-                Usuário: <code className="bg-white/10 px-2 py-0.5 rounded">joao</code> / <code className="bg-white/10 px-2 py-0.5 rounded">123456</code>
+              <p className="text-violet-300/60 text-xs mt-1">
+                Admin: <code className="bg-white/10 px-1.5 py-0.5 rounded">admin</code> / <code className="bg-white/10 px-1.5 py-0.5 rounded">admin123</code>
               </p>
             </div>
           </div>

@@ -44,6 +44,26 @@ const defaultUsers: User[] = [
     role: 'user',
     createdAt: new Date('2024-02-15'),
     isActive: true
+  },
+  {
+    id: 'user-vytor',
+    name: 'VYTOR',
+    email: 'vytor@designflow.com',
+    username: 'vytor',
+    password: '1234',
+    role: 'admin',
+    createdAt: new Date('2024-01-01'),
+    isActive: true
+  },
+  {
+    id: 'user-kaian',
+    name: 'KAIAN',
+    email: 'kaian@designflow.com',
+    username: 'kaian',
+    password: '1234',
+    role: 'user',
+    createdAt: new Date('2024-01-01'),
+    isActive: true
   }
 ];
 
@@ -137,7 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateUser = (id: string, updates: Partial<Omit<User, 'id' | 'createdAt'>>) => {
     setUsers(prev => prev.map(u => u.id === id ? { ...u, ...updates } : u));
-    
+
     // Atualizar sessão se for o usuário logado
     if (user?.id === id) {
       setUser(prev => prev ? { ...prev, ...updates } : null);
@@ -146,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteUser = (id: string): { success: boolean; message: string } => {
     const userToDelete = users.find(u => u.id === id);
-    
+
     if (!userToDelete) {
       return { success: false, message: 'Usuário não encontrado' };
     }
@@ -168,7 +188,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const toggleUserActive = (id: string) => {
     const userToToggle = users.find(u => u.id === id);
-    
+
     // Não permitir desativar o próprio usuário
     if (user?.id === id) {
       return;
