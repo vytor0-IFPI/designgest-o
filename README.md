@@ -3,7 +3,7 @@
 ![Banner](https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3)
 
 ## 🚀 Sobre o Projeto
-O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para profissionais que buscam excelência na organização de seus clientes e fluxos de trabalho. Combinando uma interface **Premium Dark Mode** com ferramentas de produtividade de ponta, o sistema oferece desde controle financeiro até assistência via Inteligência Artificial.
+O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para profissionais que buscam excelência na organização de seus clientes e fluxos de trabalho. Combinando uma interface **Premium Dark Mode** com ferramentas de produtividade de ponta, o sistema oferece controle financeiro, gestão de tarefas e monitoramento administrativo.
 
 🌐 **Acesse agora:** [https://vytor0-IFPI.github.io/designgest-o/](https://vytor0-IFPI.github.io/designgest-o/)
 
@@ -25,10 +25,6 @@ O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para pro
 *   Sistema de anotações rápidas estilo Post-it.
 *   Cores dinâmicas para fácil identificação e organização visual.
 *   Persistência de dados para nunca perder uma ideia.
-
-### 🤖 Gemini AI Assistant
-*   Assistente virtual integrado baseado na tecnologia Gemini.
-*   Chat interativo para auxiliar na tomada de decisões e brainstorming.
 
 ### 🛡️ Painel Administrativo de Elite
 *   **Relatórios de Auditoria:** Veja o que cada usuário está fazendo em tempo real.
