@@ -217,6 +217,36 @@ export function Login() {
           </div>
         </div>
 
+        {/* Admin List */}
+        {!isRegister && (
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center gap-3 px-4">
+              <div className="h-px flex-1 bg-white/10" />
+              <span className="text-xs font-bold text-violet-300 uppercase tracking-widest">Administradores</span>
+              <div className="h-px flex-1 bg-white/10" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {users
+                .filter(u => u.role === 'admin' && u.isActive)
+                .map(admin => (
+                  <div
+                    key={admin.id}
+                    className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                      {admin.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white truncate">{admin.name}</p>
+                      <p className="text-[10px] text-violet-300/60">Admin Master</p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
         {/* Footer */}
         <p className="text-center text-violet-300/60 text-sm mt-8">
           © 2024 DesignFlow. Todos os direitos reservados.
