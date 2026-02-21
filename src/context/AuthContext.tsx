@@ -54,40 +54,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return defaultUsers;
   });
 
-  const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.session);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Verificar se o usuário ainda existe e está ativo
-      const savedUsers = localStorage.getItem(STORAGE_KEYS.users);
-      if (savedUsers) {
-        const allUsers = JSON.parse(savedUsers) as User[];
-        const currentUser = allUsers.find(u => u.id === parsed.id && u.isActive);
-        if (currentUser) {
-          return { ...currentUser, createdAt: new Date(currentUser.createdAt) };
-        }
-      } else {
-        // Usar usuários padrão se não houver no storage
-        const currentUser = defaultUsers.find(u => u.id === parsed.id && u.isActive);
-        if (currentUser) {
-          return currentUser;
-        }
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
   }, [users]);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({ id: user.id }));
-    } else {
-      localStorage.removeItem(STORAGE_KEYS.session);
-    }
-  }, [user]);
 
   const login = (username: string, password: string): { success: boolean; message: string } => {
     const foundUser = users.find(
