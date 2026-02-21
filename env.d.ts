@@ -170,3 +170,32 @@ declare module 'lucide-react' {
     export const Underline: FC<IconProps>;
     export const Type: FC<IconProps>;
 }
+// ... (previous content kept)
+
+declare module 'path' {
+    const path: any;
+    export default path;
+}
+
+declare module 'url' {
+    export function fileURLToPath(url: string | URL): string;
+}
+
+declare module 'vite' {
+    export function defineConfig(config: any): any;
+    export function loadEnv(mode: string, envDir: string, prefixes?: string | string[]): Record<string, string>;
+}
+
+declare module '@vitejs/plugin-react' {
+    const react: any;
+    export default react;
+}
+
+declare module '@tailwindcss/vite' {
+    const tailwindcss: any;
+    export default tailwindcss;
+}
+
+declare module 'vite-plugin-singlefile' {
+    export function viteSingleFile(config?: any): any;
+}
