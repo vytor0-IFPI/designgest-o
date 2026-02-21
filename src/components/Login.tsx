@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { cn } from '../utils/cn';
 
 export function Login() {
-  const { login, addUser } = useAuth();
+  const { login, addUser, users } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
