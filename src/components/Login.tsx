@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Palette, Eye, EyeOff, LogIn, AlertCircle, UserPlus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { cn } from '../utils/cn';
@@ -62,66 +62,57 @@ export function Login() {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-xl rounded-3xl mb-4 shadow-2xl border border-white/20">
+        <div className="text-center mb-8" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div className="glass-container inline-flex items-center justify-center w-20 h-20 mb-4 shadow-2xl mx-auto" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '80px', height: '80px', marginBottom: '1rem' }}>
             <Palette className="text-white" size={40} />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Gestão de Projetos</h1>
-          <p className="text-violet-200">Sistema de Gestão Profissional</p>
+          <h1 className="text-3xl font-bold text-white mb-2" style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Gestão de Projetos</h1>
+          <p className="text-violet-200" style={{ color: '#ddd6fe' }}>Sistema de Gestão Profissional</p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">
+        <div className="glass-container p-8 shadow-2xl animate-fade-in" style={{ padding: '2rem' }}>
           <h2 className="text-xl font-semibold text-white mb-6 text-center">
             {isRegister ? 'Criar nova conta' : 'Entrar na sua conta'}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-xl p-4">
-                <AlertCircle className="text-red-400 shrink-0" size={20} />
-                <p className="text-red-200 text-sm">{error}</p>
-              </div>
-            )}
-
-            {success && (
-              <div className="flex items-center gap-2 bg-green-500/20 border border-green-500/30 rounded-xl p-4">
-                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</div>
-                <p className="text-green-200 text-sm">{success}</p>
+              <div className="flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-xl p-4" style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '1rem', borderRadius: '12px', color: '#fca5a5', marginBottom: '1rem' }}>
+                <AlertCircle className="shrink-0" size={20} />
+                <p className="text-sm">{error}</p>
               </div>
             )}
 
             {isRegister && (
               <>
-                <div>
-                  <label className="block text-sm font-medium text-violet-200 mb-2">Nome Completo</label>
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-violet-200">Nome Completo</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    disabled={isLoading}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-violet-300/50 outline-none transition-all focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20 disabled:opacity-50"
+                    className="premium-input"
                     placeholder="Seu nome"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-violet-200 mb-2">Email</label>
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-violet-200">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    disabled={isLoading}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-violet-300/50 outline-none transition-all focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20 disabled:opacity-50"
+                    className="premium-input"
                     placeholder="seu@email.com"
                   />
                 </div>
               </>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-violet-200 mb-2">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-violet-200">
                 Usuário
               </label>
               <input
@@ -129,18 +120,13 @@ export function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                disabled={isLoading}
-                className={cn(
-                  "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-violet-300/50 outline-none transition-all",
-                  "focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20",
-                  "disabled:opacity-50"
-                )}
+                className="premium-input"
                 placeholder="Seu usuário"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-violet-200 mb-2">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-violet-200">
                 Senha
               </label>
               <div className="relative">
@@ -149,18 +135,14 @@ export function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={isLoading}
-                  className={cn(
-                    "w-full px-4 py-3 pr-12 rounded-xl bg-white/10 border border-white/20 text-white placeholder-violet-300/50 outline-none transition-all",
-                    "focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20",
-                    "disabled:opacity-50"
-                  )}
+                  className="premium-input"
                   placeholder="Sua senha"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-violet-300 hover:text-white transition-colors"
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#c4b5fd' }}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -170,13 +152,7 @@ export function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className={cn(
-                "w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold transition-all shadow-lg",
-                isRegister
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 shadow-emerald-500/25"
-                  : "bg-gradient-to-r from-violet-500 to-indigo-500 shadow-violet-500/25",
-                "text-white hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
-              )}
+              className="premium-button w-full"
             >
               {isLoading ? (
                 <>
@@ -193,7 +169,7 @@ export function Login() {
           </form>
 
           {/* Toggle Button */}
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             <button
               onClick={() => {
                 setIsRegister(!isRegister);
@@ -201,6 +177,7 @@ export function Login() {
                 setSuccess('');
               }}
               className="text-violet-200 hover:text-white transition-colors text-sm font-medium flex items-center justify-center gap-2 mx-auto"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ddd6fe', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', margin: '0 auto' }}
             >
               {isRegister ? (
                 <>

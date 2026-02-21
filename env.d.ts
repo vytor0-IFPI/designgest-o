@@ -4,11 +4,11 @@ declare module 'react' {
     export const StrictMode: any;
     export const createContext: any;
     export const useContext: any;
-    export const useState: any;
-    export const useEffect: any;
-    export const useMemo: any;
-    export const useCallback: any;
-    export const useRef: any;
+    export function useState<S>(initialState: S | (() => S)): [S, any];
+    export function useEffect(effect: any, deps?: any[]): void;
+    export function useMemo<T>(factory: () => T, deps: any[]): T;
+    export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: any[]): T;
+    export function useRef<T>(initialValue: T): any;
     export type ReactNode = any;
     export type FC<P = {}> = any;
     export type ReactElement = any;

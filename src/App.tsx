@@ -22,12 +22,7 @@ function AppContent() {
   };
 
   if (!isAuthenticated) {
-    return (
-      <>
-        <div style={{ position: 'fixed', top: 0, left: 0, color: 'white', zIndex: 9999, fontSize: '10px', opacity: 0.5 }}>App Rendering...</div>
-        <Login />
-      </>
-    );
+    return <Login />;
   }
 
   const renderPage = () => {

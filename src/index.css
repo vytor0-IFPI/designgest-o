@@ -1,35 +1,85 @@
-/* @import "tailwindcss"; */
+@import "tailwindcss";
 
-/* Design Gestão - Reset e Estilos de Segurança */
-:root {
+@theme {
     --color-background: #09090b;
     --color-surface: #121214;
-    --color-text: #ffffff;
-    --color-accent: #7c3aed;
+    --color-surface-hover: #1c1c1f;
+    --color-border: #27272a;
+    --color-violet-500: #8b5cf6;
+    --color-violet-600: #7c3aed;
+    --color-violet-700: #6d28d9;
 }
 
-* {
-    box-sizing: border-box;
+/* Fallback & Custom Design System */
+:root {
+    --bg: #09090b;
+    --card: #121214;
+    --border: #27272a;
+    --primary: #7c3aed;
+    --text: #ffffff;
+    --text-dim: #a1a1aa;
 }
 
-body {
-    background-color: var(--color-background);
-    color: var(--color-text);
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, sans-serif;
-    min-height: 100vh;
+@layer base {
+    body {
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
 }
 
-#root {
-    min-height: 100vh;
+/* Premium Login Styles (Safe Core) */
+.glass-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
 }
 
-/* Fallback para quando o Tailwind não carregar */
-.min-h-screen {
-    min-height: 100vh;
+.premium-input {
+    background: #000000 !important;
+    border: 1px solid var(--border) !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    width: 100%;
+    transition: all 0.2s;
 }
 
+.premium-input:focus {
+    border-color: var(--primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.premium-button {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.premium-button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.premium-button:active {
+    transform: translateY(0);
+}
+
+/* Tailwind Utilities (these will work if Tailwind loads, otherwise we have fallbacks) */
 .flex {
     display: flex;
 }
@@ -42,22 +92,14 @@ body {
     justify-content: center;
 }
 
-.bg-gradient-to-br {
-    background: linear-gradient(to bottom right, #2e1065, #1e1b4b, #3b0764);
+.gap-2 {
+    gap: 0.5rem;
 }
 
-/* Overwrite common utility patterns */
-.bg-white {
-    background-color: var(--color-surface) !important;
+.w-full {
+    width: 100%;
 }
 
-.text-white {
-    color: white !important;
-}
-
-/* Mensagem de Diagnóstico */
-div[style*="zIndex: 9999"] {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 2px 5px;
-    border-radius: 0 0 5px 0;
+.text-center {
+    text-align: center;
 }
