@@ -1,21 +1,25 @@
-import { 
-  Users, 
-  FolderKanban, 
-  Clock, 
+import {
+  Users,
+  FolderKanban,
+  Clock,
   CheckCircle2,
   TrendingUp,
   AlertCircle,
   DollarSign,
-  Calendar
+  Calendar,
+  UserCircle
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 import { statusLabels, statusColors, priorityColors, priorityLabels } from '../types';
 
 export function Dashboard() {
   const { clients, projects, getClient } = useData();
+  const { users } = useAuth();
 
   const stats = {
     totalClients: clients.length,
+    totalUsers: users.length,
     totalProjects: projects.length,
     inProgress: projects.filter(p => p.status === 'in_progress').length,
     completed: projects.filter(p => p.status === 'completed').length,
@@ -33,8 +37,8 @@ export function Dashboard() {
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5);
 
-  const urgentProjects = projects.filter(p => 
-    p.priority === 'high' && 
+  const urgentProjects = projects.filter(p =>
+    p.priority === 'high' &&
     (p.status === 'pending' || p.status === 'in_progress')
   );
 
@@ -55,12 +59,21 @@ export function Dashboard() {
             <div className="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
               <Users className="text-violet-600" size={24} />
             </div>
-            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-              +12%
-            </span>
+            <div className="text-right">
+              <p className="text-xs font-medium text-violet-400">Total</p>
+              <p className="text-lg font-bold text-slate-800">{stats.totalClients + stats.totalUsers}</p>
+            </div>
           </div>
-          <p className="text-2xl font-bold text-slate-800">{stats.totalClients}</p>
-          <p className="text-sm text-slate-500">Clientes</p>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div>
+              <p className="text-xl font-bold text-slate-800">{stats.totalClients}</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Clientes</p>
+            </div>
+            <div className="border-l border-slate-100 pl-2">
+              <p className="text-xl font-bold text-slate-800">{stats.totalUsers}</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Usuários</p>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
