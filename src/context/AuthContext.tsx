@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../types';
 import { useGmail } from './GmailContext';
+import { cloudSync } from '../services/db';
 
 interface AuthContextType {
   user: User | null;
@@ -58,6 +59,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null);
 
+  // Sync users from cloud on mount
+  useEffect(() => {
+    const syncFromCloud = async () => {
+      const cloudUsers = await cloudSync.fetch('users');
+      if (cloudUsers) {
+        const formatted = cloudUsers.map((u: any) => ({ ...u, createdAt: new Date(u.createdAt) }));
+        setUsers(formatted);
+      }
+    };
+    syncFromCloud();
+  }, []);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
   }, [users]);
@@ -102,6 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     setUsers(prev => [...prev, userToAdd]);
+    cloudSync.upsert('users', userToAdd); // Push to cloud
 
     // Enviar e-mail de Boas-vindas
     sendNotification(
@@ -125,7 +139,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUser = (id: string, updates: Partial<Omit<User, 'id' | 'createdAt'>>) => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, ...updates } : u));
+    setUsers(prev => {
+      const updated = prev.map(u => u.id === id ? { ...u, ...updates } : u);
+      const userToUpdate = updated.find(u => u.id === id);
+      if (userToUpdate) cloudSync.upsert('users', userToUpdate); // Push to cloud
+      return updated;
+    });
 
     // Atualizar sessão se for o usuário logado
     if (user?.id === id) {
@@ -152,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setUsers(prev => prev.filter(u => u.id !== id));
+    cloudSync.delete('users', id); // Push to cloud removal
     return { success: true, message: 'Usuário excluído com sucesso!' };
   };
 
@@ -171,7 +191,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u));
+    setUsers(prev => {
+      const updated = prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u);
+      const userToUpdate = updated.find(u => u.id === id);
+      if (userToUpdate) cloudSync.upsert('users', userToUpdate); // Push to cloud
+      return updated;
+    });
   };
 
   return (

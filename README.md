@@ -38,6 +38,25 @@ O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para pro
 *   **Relatórios Administrativos:** Administradores recebem alertas de atividades críticas por e-mail.
 *   **Status de Projeto:** Notifique clientes sobre progresso de projetos com um clique.
 
+### ☁️ Sincronização em Nuvem (Multi-dispositivos)
+O sistema agora suporta sincronização global via **Supabase**. Isso resolve o problema de dados que não aparecem em outros dispositivos (como celular e notebook).
+
+**Para ativar a sincronização:**
+1. Crie um projeto no [Supabase](https://supabase.com/).
+2. Adicione as seguintes variáveis ao seu arquivo `.env`:
+   ```env
+   VITE_SUPABASE_URL=seu_url_do_supabase
+   VITE_SUPABASE_ANON_KEY=sua_chave_anon_key
+   ```
+3. Execute o seguinte SQL no editor do Supabase para criar as tabelas:
+   ```sql
+   create table users (id uuid primary key, name text, email text, username text, password text, role text, "createdAt" timestamp with time zone, "isActive" boolean);
+   create table clients (id uuid primary key, name text, email text, phone text, company text, "createdAt" timestamp with time zone);
+   create table projects (id uuid primary key, title text, description text, "clientId" uuid, status text, priority text, deadline timestamp with time zone, price numeric, tags jsonb, messages jsonb, "createdAt" timestamp with time zone, "updatedAt" timestamp with time zone);
+   create table tasks (id uuid primary key, title text, description text, status text, priority text, "createdAt" timestamp with time zone);
+   create table notes (id uuid primary key, title text, content text, color text, "createdAt" timestamp with time zone);
+   ```
+
 ---
 
 ## 🎨 Design System

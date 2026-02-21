@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { v4 as uuidv4 } from 'uuid';
 import { Client, Project, Message, Task, Note } from '../types';
 import { useGmail } from './GmailContext';
+import { cloudSync } from '../services/db';
 
 interface DataContextType {
   clients: Client[];
@@ -84,6 +85,30 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return [];
   });
 
+  // Cloud Sync on Mount
+  useEffect(() => {
+    const syncAll = async () => {
+      const c = await cloudSync.fetch('clients');
+      if (c) setClients(c.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
+
+      const p = await cloudSync.fetch('projects');
+      if (p) setProjects(p.map((x: any) => ({
+        ...x,
+        createdAt: new Date(x.createdAt),
+        updatedAt: new Date(x.updatedAt),
+        deadline: x.deadline ? new Date(x.deadline) : undefined,
+        messages: x.messages.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }))
+      })));
+
+      const t = await cloudSync.fetch('tasks');
+      if (t) setTasks(t.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
+
+      const n = await cloudSync.fetch('notes');
+      if (n) setNotes(n.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
+    };
+    syncAll();
+  }, []);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(clients));
   }, [clients]);
@@ -100,10 +125,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEYS.notes, JSON.stringify(notes));
   }, [notes]);
 
-  // Clients & Projects Methods
   const addClient = (client: any) => {
     const newClient = { ...client, id: uuidv4(), createdAt: new Date() };
     setClients(prev => [...prev, newClient]);
+    cloudSync.upsert('clients', newClient);
 
     // E-mail para o cliente
     sendNotification(
@@ -121,12 +146,32 @@ export function DataProvider({ children }: { children: ReactNode }) {
     // Relatório para Admin
     sendAdminReport('Novo Cliente Cadastrado', `O cliente ${newClient.name} (${newClient.company}) foi adicionado ao sistema.`);
   };
-  const updateClient = (id: string, updates: any) => setClients(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
-  const deleteClient = (id: string) => setClients(prev => prev.filter(c => c.id !== id));
+  const updateClient = (id: string, updates: any) => setClients(prev => {
+    const updated = prev.map(c => c.id === id ? { ...c, ...updates } : c);
+    const item = updated.find(x => x.id === id);
+    if (item) cloudSync.upsert('clients', item);
+    return updated;
+  });
+  const deleteClient = (id: string) => {
+    setClients(prev => prev.filter(c => c.id !== id));
+    cloudSync.delete('clients', id);
+  };
 
-  const addProject = (project: any) => setProjects(prev => [...prev, { ...project, id: uuidv4(), createdAt: new Date(), updatedAt: new Date(), messages: [] }]);
-  const updateProject = (id: string, updates: any) => setProjects(prev => prev.map(p => p.id === id ? { ...p, ...updates, updatedAt: new Date() } : p));
-  const deleteProject = (id: string) => setProjects(prev => prev.filter(p => p.id !== id));
+  const addProject = (project: any) => {
+    const newProject = { ...project, id: uuidv4(), createdAt: new Date(), updatedAt: new Date(), messages: [] };
+    setProjects(prev => [...prev, newProject]);
+    cloudSync.upsert('projects', newProject);
+  };
+  const updateProject = (id: string, updates: any) => setProjects(prev => {
+    const updated = prev.map(p => p.id === id ? { ...p, ...updates, updatedAt: new Date() } : p);
+    const item = updated.find(x => x.id === id);
+    if (item) cloudSync.upsert('projects', item);
+    return updated;
+  });
+  const deleteProject = (id: string) => {
+    setProjects(prev => prev.filter(p => p.id !== id));
+    cloudSync.delete('projects', id);
+  };
 
   const addMessage = (projectId: string, content: string, sender: any) => {
     const newMessage = { id: uuidv4(), content, sender, timestamp: new Date(), projectId };
@@ -135,25 +180,39 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   // Task Methods
   const addTask = (task: Omit<Task, 'id' | 'createdAt'>) => {
-    setTasks(prev => [...prev, { ...task, id: uuidv4(), createdAt: new Date() }]);
+    const newItem = { ...task, id: uuidv4(), createdAt: new Date() };
+    setTasks(prev => [...prev, newItem]);
+    cloudSync.upsert('tasks', newItem);
   };
 
   const updateTask = (id: string, updates: Partial<Task>) => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
+    setTasks(prev => {
+      const updated = prev.map(t => t.id === id ? { ...t, ...updates } : t);
+      const item = updated.find(x => x.id === id);
+      if (item) cloudSync.upsert('tasks', item);
+      return updated;
+    });
   };
 
   const deleteTask = (id: string) => {
     setTasks(prev => prev.filter(t => t.id !== id));
+    cloudSync.delete('tasks', id);
   };
 
   const moveTask = (id: string, newStatus: Task['status']) => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+    setTasks(prev => {
+      const updated = prev.map(t => t.id === id ? { ...t, status: newStatus } : t);
+      const item = updated.find(x => x.id === id);
+      if (item) cloudSync.upsert('tasks', item);
+      return updated;
+    });
   };
 
   // Note Methods
   const addNote = (note: Omit<Note, 'id' | 'createdAt'>) => {
     const newNote = { ...note, id: uuidv4(), createdAt: new Date() };
     setNotes(prev => [...prev, newNote]);
+    cloudSync.upsert('notes', newNote);
 
     // Relatório para Admin (Anotações internas também são monitoradas)
     sendAdminReport('Nova Anotação Criada', `Uma nova anotação intitulada "${newNote.title}" foi criada no sistema.`);
@@ -161,6 +220,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const deleteNote = (id: string) => {
     setNotes(prev => prev.filter(n => n.id !== id));
+    cloudSync.delete('notes', id);
   };
 
   const getClientProjects = (clientId: string) => projects.filter(p => p.clientId === clientId);
