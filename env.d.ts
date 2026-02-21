@@ -2,9 +2,9 @@
 
 declare module 'react' {
     export const StrictMode: any;
-    export const createContext: any;
-    export const useContext: any;
-    export function useState<S>(initialState: S | (() => S)): [S, any];
+    export function createContext<T>(defaultValue: T): any;
+    export function useContext<T>(context: any): T;
+    export function useState<S>(initialState: S | (() => S)): [S, (val: S) => void];
     export function useEffect(effect: any, deps?: any[]): void;
     export function useMemo<T>(factory: () => T, deps: any[]): T;
     export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: any[]): T;
@@ -12,12 +12,14 @@ declare module 'react' {
     export type ReactNode = any;
     export type FC<P = {}> = any;
     export type ReactElement = any;
+    export type FormEvent<T = Element> = any;
     const React: any;
     export default React;
 }
 
 declare namespace React {
     type ReactNode = any;
+    type FormEvent<T = Element> = any;
 }
 
 declare module 'react/jsx-runtime' {
@@ -60,6 +62,7 @@ declare module 'lucide-react' {
     export const TrendingUp: any;
     export const AlertCircle: any;
     export const Building: any;
+    export const Building2: any;
     export const Phone: any;
     export const Palette: any;
     export const Eye: any;
@@ -71,7 +74,19 @@ declare module 'lucide-react' {
     export const Menu: any;
     export const ClipboardList: any;
     export const UserCircle: any;
+    export const User: any;
     export const Check: any;
+    export const Filter: any;
+    export const Tag: any;
+    export const MessageCircle: any;
+    export const StickyNote: any;
+    export const MoveRight: any;
+    export const ShieldCheck: any;
+    export const ToggleLeft: any;
+    export const ToggleRight: any;
+    export const AlertTriangle: any;
+    export const Activity: any;
+    export const Download: any;
 }
 
 declare module '@react-oauth/google' {

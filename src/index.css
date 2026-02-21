@@ -7,8 +7,6 @@
     --color-border: #1e1e21;
     --color-text-primary: #ffffff;
     --color-text-secondary: #a1a1aa;
-    --color-violet-500: #8b5cf6;
-    --color-violet-600: #7c3aed;
 }
 
 /* Base Reset for Total Dark Mode */
@@ -24,39 +22,54 @@
     }
 
     body {
-        background-color: var(--bg);
-        color: var(--text);
+        background-color: var(--bg) !important;
+        color: var(--text) !important;
         margin: 0;
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
         -webkit-font-smoothing: antialiased;
     }
 }
 
-/* Force Dark Mode on all components */
-.bg-slate-50,
-.bg-gray-50,
-.bg-white {
-    background-color: var(--bg) !important;
+/* UNIVERSAL AGGRESSIVE DARK MODE OVERRIDES */
+/* This catches any hardcoded light-theme classes from legacy components */
+
+* {
+    border-color: var(--border);
 }
 
-.bg-white\/10 {
-    background-color: rgba(255, 255, 255, 0.05) !important;
+.bg-white,
+.bg-slate-50,
+.bg-gray-50,
+.bg-zinc-50 {
+    background-color: var(--card) !important;
 }
 
 .text-slate-800,
 .text-gray-900,
-.text-slate-900 {
+.text-zinc-900,
+.text-slate-700,
+.text-slate-600 {
     color: #ffffff !important;
 }
 
 .text-slate-500,
-.text-gray-500 {
+.text-gray-500,
+.text-zinc-500,
+.text-slate-400 {
     color: #a1a1aa !important;
 }
 
+.border-slate-100,
 .border-slate-200,
-.border-gray-200 {
+.border-gray-200,
+.border-zinc-200 {
     border-color: var(--border) !important;
+}
+
+.hover\:bg-slate-50:hover,
+.hover\:bg-gray-50:hover,
+.hover\:bg-white\/5:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Premium UI Elements */
@@ -81,32 +94,36 @@
     transform: translateY(-2px);
 }
 
-.premium-input {
+.premium-input,
+input:not([type="checkbox"]),
+select,
+textarea {
     background: #000000 !important;
     border: 1px solid var(--border) !important;
     color: white !important;
-    padding: 12px 16px !important;
-    border-radius: 12px !important;
-    width: 100%;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
     transition: all 0.2s;
 }
 
-.premium-input:focus {
+input:focus,
+select:focus,
+textarea:focus {
     border-color: var(--primary) !important;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2) !important;
 }
 
 .premium-button {
     background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-    color: white;
+    color: white !important;
     font-weight: 600;
     padding: 12px 24px;
     border-radius: 12px;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -115,6 +132,12 @@
 .premium-button:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
+}
+
+/* Modal and Overlays */
+.fixed.inset-0.bg-black\/50 {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(4px);
 }
 
 /* Dashboard Stat Cards */
@@ -158,4 +181,14 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #27272a;
+}
+
+/* Specific component fixes */
+.bg-yellow-50,
+.bg-blue-50,
+.bg-purple-50,
+.bg-green-50,
+.bg-red-50 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }

@@ -43,7 +43,7 @@ function GmailStatus() {
     return (
       <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-xs font-semibold animate-fade-in shadow-sm">
         <Check size={14} />
-        <span className="hidden sm:inline">Gmail Contectado</span>
+        <span className="hidden sm:inline">Gmail Conectado</span>
       </div>
     );
   }

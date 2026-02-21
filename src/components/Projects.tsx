@@ -45,7 +45,7 @@ interface ProjectsProps {
 
 export function Projects({ onOpenMessages }: ProjectsProps) {
   const { clients, projects, addProject, updateProject, deleteProject, getClient } = useData();
-  const { isConnected, login, sendProjectUpdate } = useGmail();
+  const { sendNotification } = useGmail();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
   const [showModal, setShowModal] = useState(false);
@@ -60,9 +60,22 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
       return;
     }
 
-    const success = await sendProjectUpdate(client.email, project.title, statusLabels[project.status]);
-    if (success) {
+    const result = await sendNotification(
+      client.email,
+      `Atualização de Projeto: ${project.title}`,
+      `<div style="font-family: sans-serif; padding: 20px; color: #333;">
+        <h2>Olá, ${client.name}!</h2>
+        <p>Temos uma atualização sobre o seu projeto <strong>${project.title}</strong>.</p>
+        <p><strong>Status Atual:</strong> ${statusLabels[project.status]}</p>
+        <hr />
+        <p>Acesse o portal para conferir todos os detalhes.</p>
+       </div>`
+    );
+
+    if (result.success) {
       alert('E-mail de atualização enviado com sucesso!');
+    } else {
+      alert(result.error || 'Falha ao enviar e-mail.');
     }
   };
 
@@ -129,26 +142,26 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-4 justify-between">
-        <div className="flex flex-col sm:flex-row gap-4 flex-1">
+      <div className="flex flex-col lg:flex-row gap-4 justify-between items-center">
+        <div className="flex flex-col sm:flex-row gap-4 flex-1 w-full">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
             <input
               type="text"
               placeholder="Buscar projetos..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
+              className="premium-input pl-10!"
             />
           </div>
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" size={18} />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as ProjectStatus | 'all')}
-              className="pl-10 pr-8 py-3 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all appearance-none bg-white"
+              className="premium-input pl-10 pr-10 appearance-none min-w-[180px]"
             >
               <option value="all">Todos os status</option>
               {Object.entries(statusLabels).map(([value, label]) => (
@@ -157,79 +170,69 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
             </select>
           </div>
         </div>
-        <div className="flex gap-2">
-          {!isConnected && (
-            <button
-              onClick={() => login()}
-              className="flex items-center gap-2 bg-white text-slate-700 px-6 py-3 rounded-xl hover:bg-slate-50 transition-colors font-medium border border-slate-200 shadow-sm"
-            >
-              <Mail size={20} className="text-red-500" />
-              Conectar Gmail
-            </button>
-          )}
-          <button
-            onClick={() => {
-              setFormData(emptyForm);
-              setEditingId(null);
-              setShowModal(true);
-            }}
-            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity font-medium shadow-lg shadow-violet-200"
-          >
-            <Plus size={20} />
-            Novo Projeto
-          </button>
-        </div>
+
+        <button
+          onClick={() => {
+            setFormData(emptyForm);
+            setEditingId(null);
+            setShowModal(true);
+          }}
+          className="premium-button w-full lg:w-auto"
+        >
+          <Plus size={20} />
+          <span>Novo Projeto</span>
+        </button>
       </div>
 
       {/* Projects List */}
-      <div className="space-y-4">
+      <div className="grid gap-4">
         {filteredProjects.map(project => {
           const client = getClient(project.clientId);
           return (
-            <div key={project.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+            <div key={project.id} className="premium-card group border-white/5 hover:border-violet-500/30">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                 <div className="flex-1">
-                  <div className="flex items-start gap-3 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform shrink-0">
                       {project.title.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-semibold text-slate-800">{project.title}</h3>
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[project.status]}`}>
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <h3 className="font-bold text-lg text-white group-hover:text-violet-400 transition-colors">{project.title}</h3>
+                        <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${statusColors[project.status]}`}>
                           {statusLabels[project.status]}
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${priorityColors[project.priority]}`}>
+                        <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider ${priorityColors[project.priority]}`}>
                           {priorityLabels[project.priority]}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-500">{client?.name || 'Cliente não encontrado'}</p>
+                      <p className="text-sm text-zinc-500 font-medium">{client?.name || 'Cliente Particular'}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-600 line-clamp-2 mb-3">{project.description}</p>
+                  <p className="text-sm text-zinc-400 line-clamp-2 mb-4 leading-relaxed">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag, idx) => (
-                      <span key={idx} className="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-                        <Tag size={12} />
+                      <span key={idx} className="inline-flex items-center gap-1.5 text-[10px] bg-white/5 text-zinc-400 px-3 py-1 rounded-full font-bold uppercase border border-white/5">
+                        <Tag size={10} className="text-violet-500" />
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex flex-row lg:flex-col items-center lg:items-end gap-4 lg:gap-2">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <DollarSign size={16} className="text-green-600" />
+                <div className="flex flex-col sm:flex-row lg:flex-col items-center lg:items-end gap-6 lg:gap-3 py-4 lg:py-0 border-y lg:border-y-0 border-white/5">
+                  <div className="flex items-center gap-2 text-sm font-bold text-white">
+                    <DollarSign size={16} className="text-emerald-500" />
                     {formatCurrency(project.price)}
                   </div>
                   {project.deadline && (
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Calendar size={16} className="text-blue-600" />
+                    <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+                      <Calendar size={16} className="text-blue-500" />
                       {formatDate(project.deadline)}
                     </div>
                   )}
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
-                    <MessageCircle size={16} />
+                  <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">
+                    <MessageCircle size={14} />
                     {project.messages.length} msgs
                   </div>
                 </div>
@@ -237,38 +240,38 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
                 <div className="flex lg:flex-col gap-2">
                   <button
                     onClick={() => setViewProject(project)}
-                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
+                    className="flex-1 lg:flex-none p-3 hover:bg-white/5 rounded-xl text-zinc-500 hover:text-white transition-all border border-transparent hover:border-white/10"
                     title="Ver detalhes"
                   >
-                    <Eye size={18} />
+                    <Eye size={20} />
                   </button>
                   <button
                     onClick={() => handleSendUpdate(project)}
-                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 transition-colors"
-                    title="Enviar atualização por E-mail"
+                    className="flex-1 lg:flex-none p-3 hover:bg-violet-500/10 rounded-xl text-zinc-500 hover:text-violet-400 transition-all border border-transparent hover:border-violet-500/20"
+                    title="Notificar Cliente"
                   >
-                    <Mail size={18} />
+                    <Mail size={20} />
                   </button>
                   <button
                     onClick={() => onOpenMessages(project.id)}
-                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-green-50 rounded-lg text-slate-400 hover:text-green-600 transition-colors"
-                    title="Mensagens"
+                    className="flex-1 lg:flex-none p-3 hover:bg-blue-500/10 rounded-xl text-zinc-500 hover:text-blue-400 transition-all border border-transparent hover:border-blue-500/20"
+                    title="Chat"
                   >
-                    <MessageCircle size={18} />
+                    <MessageCircle size={20} />
                   </button>
                   <button
                     onClick={() => handleEdit(project)}
-                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-blue-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors"
+                    className="flex-1 lg:flex-none p-3 hover:bg-zinc-100/10 rounded-xl text-zinc-500 hover:text-white transition-all border border-transparent hover:border-white/10"
                     title="Editar"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={20} />
                   </button>
                   <button
                     onClick={() => handleDelete(project.id)}
-                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-colors"
+                    className="flex-1 lg:flex-none p-3 hover:bg-red-500/10 rounded-xl text-zinc-500 hover:text-red-500 transition-all border border-transparent hover:border-red-500/20"
                     title="Excluir"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={20} />
                   </button>
                 </div>
               </div>
@@ -278,61 +281,57 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
       </div>
 
       {filteredProjects.length === 0 && (
-        <div className="text-center py-12">
-          <Calendar size={48} className="mx-auto mb-4 text-slate-300" />
-          <p className="text-slate-500">Nenhum projeto encontrado</p>
+        <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
+          <Calendar size={64} className="mx-auto mb-4 text-zinc-800" />
+          <p className="text-zinc-500 font-medium">Buscamos em todos os cantos, mas nenhum projeto foi encontrado.</p>
         </div>
       )}
 
       {/* View Project Modal */}
       {viewProject && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-slate-100 sticky top-0 bg-white">
-              <h3 className="text-lg font-semibold text-slate-800">{viewProject.title}</h3>
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="premium-card w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto p-0 border-white/10">
+            <div className="flex items-center justify-between p-6 border-b border-white/5 sticky top-0 bg-zinc-950/80 backdrop-blur-md z-10">
+              <h3 className="text-xl font-bold text-white">{viewProject.title}</h3>
               <button
                 onClick={() => setViewProject(null)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-zinc-400 hover:text-white"
               >
-                <X size={20} />
+                <X size={24} />
               </button>
             </div>
-            <div className="p-6 space-y-4">
-              <div className="flex flex-wrap gap-2">
-                <span className={`text-sm px-3 py-1 rounded-full font-medium ${statusColors[viewProject.status]}`}>
+            <div className="p-8 space-y-8">
+              <div className="flex flex-wrap gap-3">
+                <span className={`text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-widest ${statusColors[viewProject.status]} bg-opacity-20`}>
                   {statusLabels[viewProject.status]}
                 </span>
-                <span className={`text-sm px-3 py-1 rounded-full font-medium ${priorityColors[viewProject.priority]}`}>
-                  Prioridade: {priorityLabels[viewProject.priority]}
+                <span className={`text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-widest ${priorityColors[viewProject.priority]} bg-opacity-20 flex items-center gap-2`}>
+                  <div className="w-2 h-2 rounded-full bg-current animate-pulse" />
+                  Prioridade {priorityLabels[viewProject.priority]}
                 </span>
               </div>
 
-              <div>
-                <h4 className="font-medium text-slate-700 mb-1">Cliente</h4>
-                <p className="text-slate-600">{getClient(viewProject.clientId)?.name || 'N/A'}</p>
-              </div>
-
-              <div>
-                <h4 className="font-medium text-slate-700 mb-1">Descrição</h4>
-                <p className="text-slate-600">{viewProject.description}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium text-slate-700 mb-1">Valor</h4>
-                  <p className="text-slate-600">{formatCurrency(viewProject.price)}</p>
+              <div className="grid sm:grid-cols-2 gap-8">
+                <div className="space-y-1">
+                  <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Cliente Associado</h4>
+                  <p className="text-white font-medium text-lg">{getClient(viewProject.clientId)?.name || 'Particular'}</p>
                 </div>
-                <div>
-                  <h4 className="font-medium text-slate-700 mb-1">Prazo</h4>
-                  <p className="text-slate-600">{formatDate(viewProject.deadline)}</p>
+                <div className="space-y-1">
+                  <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Valor do Investimento</h4>
+                  <p className="text-emerald-400 font-bold text-lg">{formatCurrency(viewProject.price)}</p>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-medium text-slate-700 mb-2">Tags</h4>
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Objetivos e Descrição</h4>
+                <p className="text-zinc-300 leading-relaxed bg-white/5 p-4 rounded-2xl border border-white/5">{viewProject.description}</p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Categorias e Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {viewProject.tags.map((tag, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1 text-sm bg-violet-100 text-violet-700 px-3 py-1 rounded-full">
+                    <span key={idx} className="inline-flex items-center gap-2 text-xs bg-violet-500/10 text-violet-400 px-4 py-1.5 rounded-full border border-violet-500/20 font-bold">
                       <Tag size={14} />
                       {tag}
                     </span>
@@ -340,18 +339,16 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100">
-                <button
-                  onClick={() => {
-                    setViewProject(null);
-                    onOpenMessages(viewProject.id);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity font-medium"
-                >
-                  <MessageCircle size={20} />
-                  Ver Mensagens ({viewProject.messages.length})
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  setViewProject(null);
+                  onOpenMessages(viewProject.id);
+                }}
+                className="premium-button w-full h-14"
+              >
+                <MessageCircle size={22} />
+                <span>Central de Mensagens ({viewProject.messages.length})</span>
+              </button>
             </div>
           </div>
         </div>
@@ -359,79 +356,79 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
 
       {/* Form Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-slate-100 sticky top-0 bg-white">
-              <h3 className="text-lg font-semibold text-slate-800">
-                {editingId ? 'Editar Projeto' : 'Novo Projeto'}
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+          <div className="premium-card w-full max-w-lg shadow-2xl p-0 border-white/10 overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-zinc-950">
+              <h3 className="text-xl font-bold text-white">
+                {editingId ? 'Refinar Projeto' : 'Arquitetar Novo Projeto'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-zinc-400 hover:text-white"
               >
-                <X size={20} />
+                <X size={24} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Título *</label>
+            <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Nome do Projeto</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
-                  placeholder="Nome do projeto"
+                  className="premium-input"
+                  placeholder="Ex: Branding Design Flow"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Cliente *</label>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Cliente Responsável</label>
                 <select
                   required
                   value={formData.clientId}
                   onChange={(e) => setFormData({ ...formData, clientId: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
+                  className="premium-input"
                 >
-                  <option value="">Selecione um cliente</option>
+                  <option value="">Selecione o titular</option>
                   {clients.map(client => (
                     <option key={client.id} value={client.id}>{client.name}</option>
                   ))}
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Descrição *</label>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Escopo e Detalhes</label>
                 <textarea
                   required
-                  rows={3}
+                  rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all resize-none"
-                  placeholder="Descreva o projeto"
+                  className="premium-input resize-none"
+                  placeholder="Quais os objetivos deste projeto?"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Status Inicial</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value as ProjectStatus })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
+                    className="premium-input"
                   >
                     {Object.entries(statusLabels).map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Prioridade</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Prioridade</label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value as ProjectPriority })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
+                    className="premium-input"
                   >
                     {Object.entries(priorityLabels).map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>
@@ -440,54 +437,54 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Prazo</label>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Prazo de Entrega</label>
                   <input
                     type="date"
                     value={formData.deadline}
                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
+                    className="premium-input"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Valor (R$)</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Orçamento (R$)</label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
-                    placeholder="0.00"
+                    className="premium-input font-mono"
+                    placeholder="0,00"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tags</label>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Tags Estratégicas</label>
                 <input
                   type="text"
                   value={formData.tags}
                   onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none transition-all"
-                  placeholder="logo, branding, social (separadas por vírgula)"
+                  className="premium-input"
+                  placeholder="Design, Dev, Marketing (separadas por vírgula)"
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-4 p-6 bg-zinc-950 border-t border-white/5 -mx-8 -mb-8">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium"
+                  className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-zinc-400 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium hover:opacity-90 transition-opacity"
+                  className="premium-button flex-1"
                 >
-                  {editingId ? 'Salvar' : 'Criar Projeto'}
+                  {editingId ? 'Salvar Alterações' : 'Finalizar Projeto'}
                 </button>
               </div>
             </form>

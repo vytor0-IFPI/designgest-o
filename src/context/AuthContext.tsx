@@ -134,7 +134,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         <p style="font-size: 14px; color: #a1a1aa;">Se não foi você, recomendamos alterar sua senha imediatamente para garantir a segurança dos seus dados.</p>
       </div>
       `
-    );
+    ).then(res => {
+      if (!res.success) console.warn('Alerta de login não enviado:', res.error);
+    });
 
     return { success: true, message: 'Login realizado com sucesso!' };
   };
