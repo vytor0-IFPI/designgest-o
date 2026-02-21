@@ -4,10 +4,15 @@ const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const cloudSync = {
     isEnabled: !!SUPABASE_URL && !!SUPABASE_KEY,
 
-    async fetch(table: string) {
+    async fetch(table: string, userId?: string) {
         if (!this.isEnabled) return null;
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+            let url = `${SUPABASE_URL}/rest/v1/${table}?select=*`;
+            if (userId && table !== 'users') {
+                url += `&userId=eq.${userId}`;
+            }
+
+            const response = await fetch(url, {
                 headers: {
                     'apikey': SUPABASE_KEY!,
                     'Authorization': `Bearer ${SUPABASE_KEY}`,

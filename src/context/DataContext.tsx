@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { v4 as uuidv4 } from 'uuid';
 import { Client, Project, Message, Task, Note } from '../types';
 import { useGmail } from './GmailContext';
+import { useAuth } from './AuthContext';
 import { cloudSync } from '../services/db';
 
 interface DataContextType {
@@ -42,6 +43,7 @@ const initialClients: Client[] = [
 ];
 
 export function DataProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const { sendNotification, sendAdminReport } = useGmail();
   const [clients, setClients] = useState<Client[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.clients);
@@ -85,29 +87,31 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return [];
   });
 
-  // Cloud Sync on Mount
+  // Cloud Sync on Mount & User Change
   useEffect(() => {
+    if (!user) return;
+
     const syncAll = async () => {
-      const c = await cloudSync.fetch('clients');
+      const c = await cloudSync.fetch('clients', user.id);
       if (c) setClients(c.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
 
-      const p = await cloudSync.fetch('projects');
+      const p = await cloudSync.fetch('projects', user.id);
       if (p) setProjects(p.map((x: any) => ({
         ...x,
         createdAt: new Date(x.createdAt),
         updatedAt: new Date(x.updatedAt),
         deadline: x.deadline ? new Date(x.deadline) : undefined,
-        messages: x.messages.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }))
+        messages: x.messages ? x.messages.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })) : []
       })));
 
-      const t = await cloudSync.fetch('tasks');
+      const t = await cloudSync.fetch('tasks', user.id);
       if (t) setTasks(t.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
 
-      const n = await cloudSync.fetch('notes');
+      const n = await cloudSync.fetch('notes', user.id);
       if (n) setNotes(n.map((x: any) => ({ ...x, createdAt: new Date(x.createdAt) })));
     };
     syncAll();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(clients));
@@ -126,7 +130,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [notes]);
 
   const addClient = (client: any) => {
-    const newClient = { ...client, id: uuidv4(), createdAt: new Date() };
+    if (!user) return;
+    const newClient = { ...client, id: uuidv4(), userId: user.id, createdAt: new Date() };
     setClients(prev => [...prev, newClient]);
     cloudSync.upsert('clients', newClient);
 
@@ -158,7 +163,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   };
 
   const addProject = (project: any) => {
-    const newProject = { ...project, id: uuidv4(), createdAt: new Date(), updatedAt: new Date(), messages: [] };
+    if (!user) return;
+    const newProject = { ...project, id: uuidv4(), userId: user.id, createdAt: new Date(), updatedAt: new Date(), messages: [] };
     setProjects(prev => [...prev, newProject]);
     cloudSync.upsert('projects', newProject);
   };
@@ -180,7 +186,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   // Task Methods
   const addTask = (task: Omit<Task, 'id' | 'createdAt'>) => {
-    const newItem = { ...task, id: uuidv4(), createdAt: new Date() };
+    if (!user) return;
+    const newItem = { ...task, id: uuidv4(), userId: user.id, createdAt: new Date() };
     setTasks(prev => [...prev, newItem]);
     cloudSync.upsert('tasks', newItem);
   };
@@ -210,7 +217,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   // Note Methods
   const addNote = (note: Omit<Note, 'id' | 'createdAt'>) => {
-    const newNote = { ...note, id: uuidv4(), createdAt: new Date() };
+    if (!user) return;
+    const newNote = { ...note, id: uuidv4(), userId: user.id, createdAt: new Date() };
     setNotes(prev => [...prev, newNote]);
     cloudSync.upsert('notes', newNote);
 
@@ -223,13 +231,22 @@ export function DataProvider({ children }: { children: ReactNode }) {
     cloudSync.delete('notes', id);
   };
 
-  const getClientProjects = (clientId: string) => projects.filter(p => p.clientId === clientId);
-  const getClient = (clientId: string) => clients.find(c => c.id === clientId);
-  const getProject = (projectId: string) => projects.find(p => p.id === projectId);
+  const getClientProjects = (clientId: string) => userProjects.filter(p => p.clientId === clientId);
+  const getClient = (clientId: string) => userClients.find(c => c.id === clientId);
+  const getProject = (projectId: string) => userProjects.find(p => p.id === projectId);
+
+  // Filter data for the current user in the context value
+  const userClients = clients.filter(c => c.userId === user?.id);
+  const userProjects = projects.filter(p => p.userId === user?.id);
+  const userTasks = tasks.filter(t => t.userId === user?.id);
+  const userNotes = notes.filter(n => n.userId === user?.id);
 
   return (
     <DataContext.Provider value={{
-      clients, projects, tasks, notes,
+      clients: userClients,
+      projects: userProjects,
+      tasks: userTasks,
+      notes: userNotes,
       addClient, updateClient, deleteClient,
       addProject, updateProject, deleteProject,
       addMessage, getClientProjects, getClient, getProject,

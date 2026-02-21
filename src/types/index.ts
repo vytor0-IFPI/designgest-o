@@ -12,6 +12,7 @@ export interface User {
 
 export interface Client {
   id: string;
+  userId: string;
   name: string;
   email: string;
   phone: string;
@@ -30,6 +31,7 @@ export interface Message {
 
 export interface Project {
   id: string;
+  userId: string;
   title: string;
   description: string;
   clientId: string;
@@ -76,6 +78,7 @@ export const priorityColors: Record<ProjectPriority, string> = {
 
 export interface Task {
   id: string;
+  userId: string;
   title: string;
   description?: string;
   status: 'todo' | 'in_progress' | 'done';
@@ -85,6 +88,7 @@ export interface Task {
 
 export interface Note {
   id: string;
+  userId: string;
   title: string;
   content: string;
   color: string;

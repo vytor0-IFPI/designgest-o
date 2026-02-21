@@ -51,10 +51,10 @@ O sistema agora suporta sincronização global via **Supabase**. Isso resolve o 
 3. Execute o seguinte SQL no editor do Supabase para criar as tabelas:
    ```sql
    create table users (id uuid primary key, name text, email text, username text, password text, role text, "createdAt" timestamp with time zone, "isActive" boolean);
-   create table clients (id uuid primary key, name text, email text, phone text, company text, "createdAt" timestamp with time zone);
-   create table projects (id uuid primary key, title text, description text, "clientId" uuid, status text, priority text, deadline timestamp with time zone, price numeric, tags jsonb, messages jsonb, "createdAt" timestamp with time zone, "updatedAt" timestamp with time zone);
-   create table tasks (id uuid primary key, title text, description text, status text, priority text, "createdAt" timestamp with time zone);
-   create table notes (id uuid primary key, title text, content text, color text, "createdAt" timestamp with time zone);
+   create table clients (id uuid primary key, "userId" uuid, name text, email text, phone text, company text, "createdAt" timestamp with time zone);
+   create table projects (id uuid primary key, "userId" uuid, title text, description text, "clientId" uuid, status text, priority text, deadline timestamp with time zone, price numeric, tags jsonb, messages jsonb, "createdAt" timestamp with time zone, "updatedAt" timestamp with time zone);
+   create table tasks (id uuid primary key, "userId" uuid, title text, description text, status text, priority text, "createdAt" timestamp with time zone);
+   create table notes (id uuid primary key, "userId" uuid, title text, content text, color text, "createdAt" timestamp with time zone);
    ```
 
 ---
