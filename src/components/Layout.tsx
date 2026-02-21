@@ -11,12 +11,13 @@ import {
   Settings,
   ChevronDown,
   Sparkles,
-  BarChart3
+  BarChart3,
+  ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { cn } from '../utils/cn';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports' | 'tasks';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ const navItems: { page: Page; label: string; icon: React.ReactNode; adminOnly?: 
   { page: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
   { page: 'clients', label: 'Clientes', icon: <Users size={20} /> },
   { page: 'projects', label: 'Projetos', icon: <FolderKanban size={20} /> },
+  { page: 'tasks', label: 'Tarefas', icon: <ClipboardList size={20} /> },
   { page: 'gemini', label: 'Gemini AI', icon: <Sparkles size={20} className="text-blue-400" /> },
   { page: 'reports', label: 'Relatórios', icon: <BarChart3 size={20} />, adminOnly: true },
   { page: 'users', label: 'Usuários', icon: <Settings size={20} />, adminOnly: true },

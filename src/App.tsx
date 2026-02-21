@@ -9,8 +9,9 @@ import { Projects } from './components/Projects';
 import { Users } from './components/Users';
 import { GeminiAssistant } from './components/GeminiAssistant';
 import { Reports } from './components/Reports';
+import { Tasks } from './components/Tasks';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports' | 'tasks';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
@@ -36,6 +37,8 @@ function AppContent() {
         return <GeminiAssistant />;
       case 'reports':
         return <Reports />;
+      case 'tasks':
+        return <Tasks />;
       case 'users':
         return <Users />;
       default:

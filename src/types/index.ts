@@ -73,3 +73,20 @@ export const priorityColors: Record<ProjectPriority, string> = {
   medium: 'bg-orange-100 text-orange-800',
   high: 'bg-red-100 text-red-800'
 };
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: 'todo' | 'in_progress' | 'done';
+  priority: 'low' | 'medium' | 'high';
+  createdAt: Date;
+}
+
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  color: string;
+  createdAt: Date;
+}
