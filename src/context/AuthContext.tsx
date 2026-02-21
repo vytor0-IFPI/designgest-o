@@ -118,6 +118,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setUser(foundUser);
+
+    // Enviar e-mail de alerta de login
+    sendNotification(
+      foundUser.email,
+      'Novo Login Detectado 🔐',
+      `
+      <div style="background-color: #09090b; color: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #1e1e21;">
+        <h2 style="color: #7c3aed; margin-top: 0;">Olá, ${foundUser.name}!</h2>
+        <p>Um novo acesso foi detectado em sua conta no <strong>Elite Management System</strong>.</p>
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0; color: #a1a1aa;"><strong>Usuário:</strong> ${foundUser.username}</p>
+          <p style="margin: 5px 0 0 0; color: #a1a1aa;"><strong>Horário:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+        </div>
+        <p style="font-size: 14px; color: #a1a1aa;">Se não foi você, recomendamos alterar sua senha imediatamente para garantir a segurança dos seus dados.</p>
+      </div>
+      `
+    );
+
     return { success: true, message: 'Login realizado com sucesso!' };
   };
 
