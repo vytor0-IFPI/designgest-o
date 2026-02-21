@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -10,11 +10,13 @@ import {
   UserCircle,
   Settings,
   ChevronDown,
-  Sparkles,
   BarChart3,
-  ClipboardList
+  ClipboardList,
+  Mail,
+  Check
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useGmail } from '../context/GmailContext';
 import { cn } from '../utils/cn';
 
 type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'reports' | 'tasks';
@@ -25,7 +27,7 @@ interface LayoutProps {
   onNavigate: (page: Page) => void;
 }
 
-const navItems: { page: Page; label: string; icon: React.ReactNode; adminOnly?: boolean }[] = [
+const navItems: { page: Page; label: string; icon: any; adminOnly?: boolean }[] = [
   { page: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
   { page: 'clients', label: 'Clientes', icon: <Users size={20} /> },
   { page: 'projects', label: 'Projetos', icon: <FolderKanban size={20} /> },
@@ -33,6 +35,29 @@ const navItems: { page: Page; label: string; icon: React.ReactNode; adminOnly?: 
   { page: 'reports', label: 'Relatórios', icon: <BarChart3 size={20} />, adminOnly: true },
   { page: 'users', label: 'Usuários', icon: <Settings size={20} />, adminOnly: true },
 ];
+
+function GmailStatus() {
+  const { isConnected, login } = useGmail();
+
+  if (isConnected) {
+    return (
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-xs font-semibold animate-fade-in shadow-sm">
+        <Check size={14} />
+        <span className="hidden sm:inline">Gmail Contectado</span>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={login}
+      className="flex items-center gap-2 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold rounded-full transition-all shadow-md active:scale-95"
+    >
+      <Mail size={14} />
+      <span>Conectar Gmail</span>
+    </button>
+  );
+}
 
 export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -134,67 +159,71 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
               </div>
             </div>
 
-            {/* User Menu */}
-            <div className="relative">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-3 p-2 hover:bg-slate-100 rounded-xl transition-colors"
-              >
-                <div className={cn(
-                  "w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm",
-                  user?.role === 'admin'
-                    ? "bg-gradient-to-br from-amber-500 to-orange-600"
-                    : "bg-gradient-to-br from-violet-500 to-indigo-600"
-                )}>
-                  {user ? getInitials(user.name) : <UserCircle size={20} />}
-                </div>
-                <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-slate-800">{user?.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {user?.role === 'admin' ? 'Administrador' : 'Usuário'}
-                  </p>
-                </div>
-                <ChevronDown size={16} className="text-slate-400 hidden sm:block" />
-              </button>
+            {/* Gmail Connection & User Menu */}
+            <div className="flex items-center gap-3">
+              <GmailStatus />
 
-              {userMenuOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
-                    <div className="p-4 border-b border-slate-100">
-                      <p className="font-medium text-slate-800">{user?.name}</p>
-                      <p className="text-sm text-slate-500">@{user?.username}</p>
-                      <p className="text-xs text-slate-400 mt-1">{user?.email}</p>
-                    </div>
-                    <div className="p-2">
-                      <button
-                        onClick={() => {
-                          logout();
-                          setUserMenuOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <LogOut size={18} />
-                        <span className="font-medium">Sair</span>
-                      </button>
-                    </div>
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-3 p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                >
+                  <div className={cn(
+                    "w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm",
+                    user?.role === 'admin'
+                      ? "bg-gradient-to-br from-amber-500 to-orange-600"
+                      : "bg-gradient-to-br from-violet-500 to-indigo-600"
+                  )}>
+                    {user ? getInitials(user.name) : <UserCircle size={20} />}
                   </div>
-                </>
-              )}
-            </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-slate-800">{user?.name}</p>
+                    <p className="text-xs text-slate-500">
+                      {user?.role === 'admin' ? 'Administrador' : 'Usuário'}
+                    </p>
+                  </div>
+                  <ChevronDown size={16} className="text-slate-400 hidden sm:block" />
+                </button>
 
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className={cn(
-                "lg:hidden p-2 hover:bg-slate-100 rounded-lg",
-                !sidebarOpen && "invisible"
-              )}
-            >
-              <X size={24} />
-            </button>
+                {userMenuOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
+                      <div className="p-4 border-b border-slate-100">
+                        <p className="font-medium text-slate-800">{user?.name}</p>
+                        <p className="text-sm text-slate-500">@{user?.username}</p>
+                        <p className="text-xs text-slate-400 mt-1">{user?.email}</p>
+                      </div>
+                      <div className="p-2">
+                        <button
+                          onClick={() => {
+                            logout();
+                            setUserMenuOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <LogOut size={18} />
+                          <span className="font-medium">Sair</span>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className={cn(
+                  "lg:hidden p-2 hover:bg-slate-100 rounded-lg",
+                  !sidebarOpen && "invisible"
+                )}
+              >
+                <X size={24} />
+              </button>
+            </div>
           </div>
         </header>
 
