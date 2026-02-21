@@ -199,3 +199,12 @@ declare module '@tailwindcss/vite' {
 declare module 'vite-plugin-singlefile' {
     export function viteSingleFile(config?: any): any;
 }
+
+declare module '@react-oauth/google' {
+    export const GoogleOAuthProvider: any;
+    export function useGoogleLogin(config: any): any;
+}
+
+declare module 'gapi-script' {
+    export const gapi: any;
+}

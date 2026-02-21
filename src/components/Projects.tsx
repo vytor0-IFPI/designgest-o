@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  Plus, 
-  Search, 
+import {
+  Plus,
+  Search,
   Calendar,
   Trash2,
   Edit2,
@@ -10,10 +10,12 @@ import {
   Tag,
   DollarSign,
   MessageCircle,
-  Eye
+  Eye,
+  Mail
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Project, statusLabels, statusColors, priorityLabels, priorityColors, ProjectStatus, ProjectPriority } from '../types';
+import { useGmail } from '../hooks/useGmail';
 
 interface ProjectFormData {
   title: string;
@@ -43,12 +45,26 @@ interface ProjectsProps {
 
 export function Projects({ onOpenMessages }: ProjectsProps) {
   const { clients, projects, addProject, updateProject, deleteProject, getClient } = useData();
+  const { isConnected, login, sendProjectUpdate } = useGmail();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProjectFormData>(emptyForm);
   const [viewProject, setViewProject] = useState<Project | null>(null);
+
+  const handleSendUpdate = async (project: Project) => {
+    const client = getClient(project.clientId);
+    if (!client?.email) {
+      alert('Este cliente não possui e-mail cadastrado.');
+      return;
+    }
+
+    const success = await sendProjectUpdate(client.email, project.title, statusLabels[project.status]);
+    if (success) {
+      alert('E-mail de atualização enviado com sucesso!');
+    }
+  };
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -141,17 +157,28 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
             </select>
           </div>
         </div>
-        <button
-          onClick={() => {
-            setFormData(emptyForm);
-            setEditingId(null);
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity font-medium shadow-lg shadow-violet-200"
-        >
-          <Plus size={20} />
-          Novo Projeto
-        </button>
+        <div className="flex gap-2">
+          {!isConnected && (
+            <button
+              onClick={() => login()}
+              className="flex items-center gap-2 bg-white text-slate-700 px-6 py-3 rounded-xl hover:bg-slate-50 transition-colors font-medium border border-slate-200 shadow-sm"
+            >
+              <Mail size={20} className="text-red-500" />
+              Conectar Gmail
+            </button>
+          )}
+          <button
+            onClick={() => {
+              setFormData(emptyForm);
+              setEditingId(null);
+              setShowModal(true);
+            }}
+            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity font-medium shadow-lg shadow-violet-200"
+          >
+            <Plus size={20} />
+            Novo Projeto
+          </button>
+        </div>
       </div>
 
       {/* Projects List */}
@@ -214,6 +241,13 @@ export function Projects({ onOpenMessages }: ProjectsProps) {
                     title="Ver detalhes"
                   >
                     <Eye size={18} />
+                  </button>
+                  <button
+                    onClick={() => handleSendUpdate(project)}
+                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 transition-colors"
+                    title="Enviar atualização por E-mail"
+                  >
+                    <Mail size={18} />
                   </button>
                   <button
                     onClick={() => onOpenMessages(project.id)}
