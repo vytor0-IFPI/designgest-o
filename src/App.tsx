@@ -6,20 +6,15 @@ import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { Clients } from './components/Clients';
 import { Projects } from './components/Projects';
-import { Messages } from './components/Messages';
 import { Users } from './components/Users';
+import { GeminiAssistant } from './components/GeminiAssistant';
+import { Reports } from './components/Reports';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'messages' | 'users';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
-  const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>();
-
-  const handleOpenMessages = (projectId: string) => {
-    setSelectedProjectId(projectId);
-    setCurrentPage('messages');
-  };
 
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
@@ -36,14 +31,11 @@ function AppContent() {
       case 'clients':
         return <Clients />;
       case 'projects':
-        return <Projects onOpenMessages={handleOpenMessages} />;
-      case 'messages':
-        return (
-          <Messages 
-            selectedProjectId={selectedProjectId} 
-            onSelectProject={setSelectedProjectId}
-          />
-        );
+        return <Projects onOpenMessages={() => setCurrentPage('gemini')} />;
+      case 'gemini':
+        return <GeminiAssistant />;
+      case 'reports':
+        return <Reports />;
       case 'users':
         return <Users />;
       default:

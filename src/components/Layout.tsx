@@ -3,19 +3,20 @@ import {
   LayoutDashboard,
   Users,
   FolderKanban,
-  MessageCircle,
   Menu,
   X,
   Palette,
   LogOut,
   UserCircle,
   Settings,
-  ChevronDown
+  ChevronDown,
+  Sparkles,
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { cn } from '../utils/cn';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'users';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -27,6 +28,8 @@ const navItems: { page: Page; label: string; icon: React.ReactNode; adminOnly?: 
   { page: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
   { page: 'clients', label: 'Clientes', icon: <Users size={20} /> },
   { page: 'projects', label: 'Projetos', icon: <FolderKanban size={20} /> },
+  { page: 'gemini', label: 'Gemini AI', icon: <Sparkles size={20} className="text-blue-400" /> },
+  { page: 'reports', label: 'Relatórios', icon: <BarChart3 size={20} />, adminOnly: true },
   { page: 'users', label: 'Usuários', icon: <Settings size={20} />, adminOnly: true },
 ];
 
@@ -58,18 +61,18 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
         "fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-violet-900 to-indigo-900 z-50 transform transition-transform duration-300 lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6">
+        <div className="p-6 h-full flex flex-col">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <Palette className="text-white" size={24} />
             </div>
             <div>
               <h1 className="text-white font-bold text-lg">Gestão de Projetos</h1>
-              <p className="text-violet-300 text-xs">Gestão Eficiente</p>
+              <p className="text-violet-300 text-xs text-nowrap">Gestão Eficiente</p>
             </div>
           </div>
 
-          <nav className="space-y-2">
+          <nav className="space-y-2 flex-1">
             {filteredNavItems.map(item => (
               <button
                 key={item.page}
@@ -87,21 +90,24 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                 {item.icon}
                 <span className="font-medium">{item.label}</span>
                 {item.adminOnly && (
-                  <span className="ml-auto text-xs bg-amber-500/30 text-amber-200 px-2 py-0.5 rounded-full">
-                    Admin
+                  <span className="ml-auto text-[10px] bg-amber-500/30 text-amber-200 px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter">
+                    Adm
                   </span>
                 )}
               </button>
             ))}
           </nav>
-        </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="bg-white/10 rounded-xl p-4">
-            <p className="text-violet-200 text-xs mb-2">Integração WhatsApp</p>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-white text-sm font-medium">Simulado</span>
+          {/* User Info Bottom */}
+          <div className="mt-auto pt-6 border-t border-white/10">
+            <div className="flex items-center gap-3 p-2">
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white text-xs font-bold">
+                {user ? getInitials(user.name) : '??'}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+                <p className="text-[10px] text-violet-300/60 uppercase">{user?.role}</p>
+              </div>
             </div>
           </div>
         </div>
