@@ -7,11 +7,10 @@ import { Dashboard } from './components/Dashboard';
 import { Clients } from './components/Clients';
 import { Projects } from './components/Projects';
 import { Users } from './components/Users';
-import { GeminiAssistant } from './components/GeminiAssistant';
 import { Reports } from './components/Reports';
 import { Tasks } from './components/Tasks';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'gemini' | 'reports' | 'tasks';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users' | 'reports' | 'tasks';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
@@ -32,9 +31,7 @@ function AppContent() {
       case 'clients':
         return <Clients />;
       case 'projects':
-        return <Projects onOpenMessages={() => setCurrentPage('gemini')} />;
-      case 'gemini':
-        return <GeminiAssistant />;
+        return <Projects onOpenMessages={() => alert('Recurso de mensagens em desenvolvimento')} />;
       case 'reports':
         return <Reports />;
       case 'tasks':
