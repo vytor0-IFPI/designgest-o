@@ -16,6 +16,10 @@ declare module 'react' {
     export default React;
 }
 
+declare namespace React {
+    type ReactNode = any;
+}
+
 declare module 'react/jsx-runtime' {
     export const jsx: any;
     export const jsxs: any;
@@ -67,6 +71,7 @@ declare module 'lucide-react' {
     export const Menu: any;
     export const ClipboardList: any;
     export const UserCircle: any;
+    export const Check: any;
 }
 
 declare module '@react-oauth/google' {
