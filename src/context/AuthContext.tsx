@@ -17,8 +17,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  users: 'designflow_users',
-  session: 'designflow_session'
+  users: 'designflow_users_v2',
+  session: 'designflow_session_v2'
 };
 
 const defaultUsers: User[] = [
