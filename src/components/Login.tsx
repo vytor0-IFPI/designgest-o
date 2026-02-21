@@ -66,8 +66,8 @@ export function Login() {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-xl rounded-3xl mb-4 shadow-2xl border border-white/20">
             <Palette className="text-white" size={40} />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">DesignFlow</h1>
-          <p className="text-violet-200">Sistema de Gestão para Design Gráfico</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Gestão de Projetos</h1>
+          <p className="text-violet-200">Sistema de Gestão Profissional</p>
         </div>
 
         {/* Auth Card */}
@@ -249,7 +249,7 @@ export function Login() {
 
         {/* Footer */}
         <p className="text-center text-violet-300/60 text-sm mt-8">
-          © 2024 DesignFlow. Todos os direitos reservados.
+          © 2024 Gestão de Projetos. Todos os direitos reservados.
         </p>
       </div>
     </div>

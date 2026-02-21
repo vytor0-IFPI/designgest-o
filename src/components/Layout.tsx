@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FolderKanban, 
+import {
+  LayoutDashboard,
+  Users,
+  FolderKanban,
   MessageCircle,
   Menu,
   X,
@@ -15,7 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { cn } from '../utils/cn';
 
-type Page = 'dashboard' | 'clients' | 'projects' | 'messages' | 'users';
+type Page = 'dashboard' | 'clients' | 'projects' | 'users';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -27,7 +27,6 @@ const navItems: { page: Page; label: string; icon: React.ReactNode; adminOnly?: 
   { page: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
   { page: 'clients', label: 'Clientes', icon: <Users size={20} /> },
   { page: 'projects', label: 'Projetos', icon: <FolderKanban size={20} /> },
-  { page: 'messages', label: 'Mensagens', icon: <MessageCircle size={20} /> },
   { page: 'users', label: 'Usuários', icon: <Settings size={20} />, adminOnly: true },
 ];
 
@@ -36,7 +35,7 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
-  const filteredNavItems = navItems.filter(item => 
+  const filteredNavItems = navItems.filter(item =>
     !item.adminOnly || user?.role === 'admin'
   );
 
@@ -48,7 +47,7 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
     <div className="min-h-screen bg-slate-50">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -65,8 +64,8 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
               <Palette className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg">DesignFlow</h1>
-              <p className="text-violet-300 text-xs">Gestão Criativa</p>
+              <h1 className="text-white font-bold text-lg">Gestão de Projetos</h1>
+              <p className="text-violet-300 text-xs">Gestão Eficiente</p>
             </div>
           </div>
 
@@ -120,7 +119,7 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
               >
                 <Menu size={24} />
               </button>
-              
+
               <div>
                 <h2 className="text-lg font-semibold text-slate-800 capitalize">
                   {filteredNavItems.find(i => i.page === currentPage)?.label}
@@ -153,9 +152,9 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
 
               {userMenuOpen && (
                 <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setUserMenuOpen(false)} 
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setUserMenuOpen(false)}
                   />
                   <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
                     <div className="p-4 border-b border-slate-100">
