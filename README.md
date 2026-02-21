@@ -74,4 +74,4 @@ O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para pro
 *   **KAIAN** - Lead Administrator
 
 ---
-© 2024 Gestão de Projetos. Todos os direitos reservados.
+© 2026 Gestão de Projetos. Todos os direitos reservados.

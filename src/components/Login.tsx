@@ -249,7 +249,7 @@ export function Login() {
 
         {/* Footer */}
         <p className="text-center text-violet-300/60 text-sm mt-8">
-          © 2024 Gestão de Projetos. Todos os direitos reservados.
+          © 2026 Gestão de Projetos. Todos os direitos reservados.
         </p>
       </div>
     </div>
