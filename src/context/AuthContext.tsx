@@ -21,30 +21,7 @@ const STORAGE_KEYS = {
   session: 'designflow_session'
 };
 
-// Usuário admin padrão
-const defaultAdmin: User = {
-  id: 'admin-1',
-  name: 'Administrador',
-  email: 'admin@designflow.com',
-  username: 'admin',
-  password: 'admin123', // Em produção, SEMPRE usar hash!
-  role: 'admin',
-  createdAt: new Date('2024-01-01'),
-  isActive: true
-};
-
 const defaultUsers: User[] = [
-  defaultAdmin,
-  {
-    id: 'user-1',
-    name: 'João Designer',
-    email: 'joao@designflow.com',
-    username: 'joao',
-    password: '123456',
-    role: 'user',
-    createdAt: new Date('2024-02-15'),
-    isActive: true
-  },
   {
     id: 'user-vytor',
     name: 'VYTOR',
@@ -61,7 +38,7 @@ const defaultUsers: User[] = [
     email: 'kaian@designflow.com',
     username: 'kaian',
     password: '1234',
-    role: 'user',
+    role: 'admin',
     createdAt: new Date('2024-01-01'),
     isActive: true
   }

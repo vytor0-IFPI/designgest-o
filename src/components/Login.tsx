@@ -138,9 +138,6 @@ export function Login() {
               <p className="text-violet-300">
                 <code className="bg-white/10 px-2 py-0.5 rounded">vytor</code> ou <code className="bg-white/10 px-2 py-0.5 rounded">kaian</code> / <code className="bg-white/10 px-2 py-0.5 rounded">1234</code>
               </p>
-              <p className="text-violet-300/60 text-xs mt-1">
-                Admin: <code className="bg-white/10 px-1.5 py-0.5 rounded">admin</code> / <code className="bg-white/10 px-1.5 py-0.5 rounded">admin123</code>
-              </p>
             </div>
           </div>
         </div>
