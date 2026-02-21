@@ -15,13 +15,22 @@ const GmailContext = createContext<GmailContextType | undefined>(undefined);
 export function GmailProvider({ children }: { children: ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('gmail_token'));
 
-    const login = useGoogleLogin({
-        onSuccess: (tokenResponse) => {
-            setAccessToken(tokenResponse.access_token);
-            localStorage.setItem('gmail_token', tokenResponse.access_token);
-        },
-        scope: 'https://www.googleapis.com/auth/gmail.send',
-    });
+    // Tentamos instanciar o hook, mas com segurança
+    let googleLogin;
+    try {
+        googleLogin = useGoogleLogin({
+            onSuccess: (tokenResponse) => {
+                setAccessToken(tokenResponse.access_token);
+                localStorage.setItem('gmail_token', tokenResponse.access_token);
+            },
+            scope: 'https://www.googleapis.com/auth/gmail.send',
+        });
+    } catch (e) {
+        console.warn("Gmail Login desativado (Provider não encontrado)");
+        googleLogin = () => console.error("Google Login não disponível");
+    }
+
+    const login = googleLogin;
 
     const sendNotification = async (to: string, subject: string, htmlContent: string) => {
         if (!accessToken) return false;
@@ -49,7 +58,6 @@ export function GmailProvider({ children }: { children: ReactNode }) {
     };
 
     const sendAdminReport = async (action: string, details: string) => {
-        // Definimos os e-mails dos administradores principais baseado no AuthContext anterior
         const adminEmails = ['vytor@designflow.com', 'kaian@designflow.com'];
 
         const htmlContent = `

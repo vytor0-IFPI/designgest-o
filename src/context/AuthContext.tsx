@@ -49,23 +49,44 @@ const defaultUsers: User[] = [
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { sendNotification, sendAdminReport } = useGmail();
   const [users, setUsers] = useState<User[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.users);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      return parsed.map((u: User) => ({ ...u, createdAt: new Date(u.createdAt) }));
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.users);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed)
+          ? parsed.map((u: any) => ({ ...u, createdAt: new Date(u.createdAt) }))
+          : defaultUsers;
+      }
+    } catch (e) {
+      console.error("Erro ao carregar usuários localmente:", e);
     }
     return defaultUsers;
   });
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = sessionStorage.getItem(STORAGE_KEYS.session);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...parsed, createdAt: new Date(parsed.createdAt) };
+      }
+    } catch (e) {
+      console.error("Erro ao carregar sessão:", e);
+    }
+    return null;
+  });
 
   // Sync users from cloud on mount
   useEffect(() => {
     const syncFromCloud = async () => {
-      const cloudUsers = await cloudSync.fetch('users');
-      if (cloudUsers) {
-        const formatted = cloudUsers.map((u: any) => ({ ...u, createdAt: new Date(u.createdAt) }));
-        setUsers(formatted);
+      try {
+        const cloudUsers = await cloudSync.fetch('users');
+        if (cloudUsers) {
+          const formatted = cloudUsers.map((u: any) => ({ ...u, createdAt: new Date(u.createdAt) }));
+          setUsers(formatted);
+        }
+      } catch (e) {
+        console.error("Erro no Sync cloud (Auth):", e);
       }
     };
     syncFromCloud();
@@ -74,6 +95,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
   }, [users]);
+
+  useEffect(() => {
+    if (user) {
+      sessionStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem(STORAGE_KEYS.session);
+    }
+  }, [user]);
 
   const login = (username: string, password: string): { success: boolean; message: string } => {
     const foundUser = users.find(
@@ -97,12 +126,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const addUser = (newUser: Omit<User, 'id' | 'createdAt' | 'isActive'>): { success: boolean; message: string } => {
-    // Verificar se username já existe
     if (users.some(u => u.username.toLowerCase() === newUser.username.toLowerCase())) {
       return { success: false, message: 'Este nome de usuário já existe' };
     }
 
-    // Verificar se email já existe
     if (users.some(u => u.email.toLowerCase() === newUser.email.toLowerCase())) {
       return { success: false, message: 'Este email já está cadastrado' };
     }
@@ -115,9 +142,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     setUsers(prev => [...prev, userToAdd]);
-    cloudSync.upsert('users', userToAdd); // Push to cloud
+    cloudSync.upsert('users', userToAdd);
 
-    // Enviar e-mail de Boas-vindas
     sendNotification(
       userToAdd.email,
       'Bem-vindo ao Gestão de Projetos! 🚀',
@@ -132,7 +158,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       `
     );
 
-    // Relatório para Admin
     sendAdminReport('Novo Usuário Criado', `O usuário ${userToAdd.name} (${userToAdd.username}) foi registrado no sistema como ${userToAdd.role}.`);
 
     return { success: true, message: 'Usuário criado com sucesso!' };
@@ -142,11 +167,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsers(prev => {
       const updated = prev.map(u => u.id === id ? { ...u, ...updates } : u);
       const userToUpdate = updated.find(u => u.id === id);
-      if (userToUpdate) cloudSync.upsert('users', userToUpdate); // Push to cloud
+      if (userToUpdate) cloudSync.upsert('users', userToUpdate);
       return updated;
     });
 
-    // Atualizar sessão se for o usuário logado
     if (user?.id === id) {
       setUser(prev => prev ? { ...prev, ...updates } : null);
     }
@@ -154,47 +178,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteUser = (id: string): { success: boolean; message: string } => {
     const userToDelete = users.find(u => u.id === id);
+    if (!userToDelete) return { success: false, message: 'Usuário não encontrado' };
+    if (user?.id === id) return { success: false, message: 'Você não pode excluir seu próprio usuário' };
 
-    if (!userToDelete) {
-      return { success: false, message: 'Usuário não encontrado' };
-    }
-
-    // Não permitir excluir o próprio usuário
-    if (user?.id === id) {
-      return { success: false, message: 'Você não pode excluir seu próprio usuário' };
-    }
-
-    // Não permitir excluir o último admin
     const admins = users.filter(u => u.role === 'admin' && u.id !== id);
     if (userToDelete.role === 'admin' && admins.length === 0) {
       return { success: false, message: 'Não é possível excluir o último administrador' };
     }
 
     setUsers(prev => prev.filter(u => u.id !== id));
-    cloudSync.delete('users', id); // Push to cloud removal
+    cloudSync.delete('users', id);
     return { success: true, message: 'Usuário excluído com sucesso!' };
   };
 
   const toggleUserActive = (id: string) => {
     const userToToggle = users.find(u => u.id === id);
-
-    // Não permitir desativar o próprio usuário
-    if (user?.id === id) {
-      return;
-    }
-
-    // Não permitir desativar o último admin ativo
+    if (user?.id === id) return;
     if (userToToggle?.role === 'admin' && userToToggle.isActive) {
       const activeAdmins = users.filter(u => u.role === 'admin' && u.isActive && u.id !== id);
-      if (activeAdmins.length === 0) {
-        return;
-      }
+      if (activeAdmins.length === 0) return;
     }
 
     setUsers(prev => {
       const updated = prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u);
       const userToUpdate = updated.find(u => u.id === id);
-      if (userToUpdate) cloudSync.upsert('users', userToUpdate); // Push to cloud
+      if (userToUpdate) cloudSync.upsert('users', userToUpdate);
       return updated;
     });
   };
@@ -218,8 +226,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 }

@@ -1,21 +1,19 @@
 /// <reference types="vite/client" />
 
 declare module 'react' {
-    export = React;
-    export as namespace React;
-}
-
-declare namespace React {
-    type ReactNode = any;
-    type FC<P = {}> = (props: P) => any;
-    type Dispatch<A> = (value: A) => void;
-    type SetStateAction<S> = S | ((prevState: S) => S);
-    function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>];
-    function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
-    function useContext<T>(context: any): T;
-    function createContext<T>(defaultValue: T): any;
-    function useRef<T>(initialValue: T | null): any;
-    interface ReactElement { type: any; props: any; key: any; }
+    export const StrictMode: any;
+    export const createContext: any;
+    export const useContext: any;
+    export const useState: any;
+    export const useEffect: any;
+    export const useMemo: any;
+    export const useCallback: any;
+    export const useRef: any;
+    export type ReactNode = any;
+    export type FC<P = {}> = any;
+    export type ReactElement = any;
+    const React: any;
+    export default React;
 }
 
 declare module 'react/jsx-runtime' {
@@ -24,44 +22,55 @@ declare module 'react/jsx-runtime' {
     export const Fragment: any;
 }
 
+declare module 'react-dom/client' {
+    export function createRoot(container: any): any;
+}
+
 declare module 'uuid' {
     export function v4(): string;
 }
 
 declare module 'lucide-react' {
-    import { FC } from 'react';
-    const icons: Record<string, FC<any>>;
-    export = icons;
-    export const LayoutDashboard: FC<any>;
-    export const Users: FC<any>;
-    export const FolderKanban: FC<any>;
-    export const Sparkles: FC<any>;
-    export const BarChart3: FC<any>;
-    export const Settings: FC<any>;
-    export const LogOut: FC<any>;
-    export const Plus: FC<any>;
-    export const Search: FC<any>;
-    export const Mail: FC<any>;
-    export const Calendar: FC<any>;
-    export const DollarSign: FC<any>;
-    export const Trash2: FC<any>;
-    export const Edit2: FC<any>;
-    export const MoreVertical: FC<any>;
-    export const MessageSquare: FC<any>;
-    export const Shield: FC<any>;
-    export const UserPlus: FC<any>;
-    export const UserX: FC<any>;
-    export const Heart: FC<any>;
-    export const Clock: FC<any>;
-    export const CheckCircle2: FC<any>;
-    export const TrendingUp: FC<any>;
-    export const AlertCircle: FC<any>;
-    export const Building: FC<any>;
-    export const Phone: FC<any>;
+    export const LayoutDashboard: any;
+    export const Users: any;
+    export const FolderKanban: any;
+    export const Sparkles: any;
+    export const BarChart3: any;
+    export const Settings: any;
+    export const LogOut: any;
+    export const Plus: any;
+    export const Search: any;
+    export const Mail: any;
+    export const Calendar: any;
+    export const DollarSign: any;
+    export const Trash2: any;
+    export const Edit2: any;
+    export const MoreVertical: any;
+    export const MessageSquare: any;
+    export const Shield: any;
+    export const UserPlus: any;
+    export const UserX: any;
+    export const Heart: any;
+    export const Clock: any;
+    export const CheckCircle2: any;
+    export const TrendingUp: any;
+    export const AlertCircle: any;
+    export const Building: any;
+    export const Phone: any;
+    export const Palette: any;
+    export const Eye: any;
+    export const EyeOff: any;
+    export const LogIn: any;
+    export const ArrowLeft: any;
+    export const ChevronDown: any;
+    export const X: any;
+    export const Menu: any;
+    export const ClipboardList: any;
+    export const UserCircle: any;
 }
 
 declare module '@react-oauth/google' {
-    export const GoogleOAuthProvider: React.FC<any>;
+    export const GoogleOAuthProvider: any;
     export function useGoogleLogin(config: any): any;
 }
 
