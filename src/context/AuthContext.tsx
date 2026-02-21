@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../types';
+import { useGmail } from './GmailContext';
 
 interface AuthContextType {
   user: User | null;
@@ -45,6 +46,7 @@ const defaultUsers: User[] = [
 ];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { sendNotification, sendAdminReport } = useGmail();
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.users);
     if (saved) {
@@ -100,6 +102,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     setUsers(prev => [...prev, userToAdd]);
+
+    // Enviar e-mail de Boas-vindas
+    sendNotification(
+      userToAdd.email,
+      'Bem-vindo ao Gestão de Projetos! 🚀',
+      `
+      <h2 style="color: #7c3aed;">Olá, ${userToAdd.name}!</h2>
+      <p>Sua conta foi criada com sucesso no nosso sistema de gestão.</p>
+      <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <p style="margin: 0;"><strong>Seu usuário:</strong> ${userToAdd.username}</p>
+        <p style="margin: 5px 0 0 0;"><strong>Seu cargo:</strong> ${userToAdd.role.toUpperCase()}</p>
+      </div>
+      <p>Agora você pode acessar o painel e começar a gerenciar seus fluxos de trabalho com excelência.</p>
+      `
+    );
+
+    // Relatório para Admin
+    sendAdminReport('Novo Usuário Criado', `O usuário ${userToAdd.name} (${userToAdd.username}) foi registrado no sistema como ${userToAdd.role}.`);
+
     return { success: true, message: 'Usuário criado com sucesso!' };
   };
 

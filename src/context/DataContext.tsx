@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Client, Project, Message, Task, Note } from '../types';
+import { useGmail } from './GmailContext';
 
 interface DataContextType {
   clients: Client[];
@@ -40,6 +41,7 @@ const initialClients: Client[] = [
 ];
 
 export function DataProvider({ children }: { children: ReactNode }) {
+  const { sendNotification, sendAdminReport } = useGmail();
   const [clients, setClients] = useState<Client[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.clients);
     if (saved) {
@@ -98,8 +100,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEYS.notes, JSON.stringify(notes));
   }, [notes]);
 
-  // Clients & Projects Methods (Simplificados para brevity conforme os originais)
-  const addClient = (client: any) => setClients(prev => [...prev, { ...client, id: uuidv4(), createdAt: new Date() }]);
+  // Clients & Projects Methods
+  const addClient = (client: any) => {
+    const newClient = { ...client, id: uuidv4(), createdAt: new Date() };
+    setClients(prev => [...prev, newClient]);
+
+    // E-mail para o cliente
+    sendNotification(
+      newClient.email,
+      'Seja bem-vindo(a) à nossa base de clientes! ✨',
+      `
+      <h2 style="color: #7c3aed;">Olá, ${newClient.name}!</h2>
+      <p>É um prazer ter você conosco. Seus dados foram cadastrados com sucesso no nosso sistema de gestão.</p>
+      <p>A partir de agora, você receberá atualizações sobre seus projetos diretamente no seu e-mail.</p>
+      <br/>
+      <p>Estamos ansiosos para trabalhar juntos!</p>
+      `
+    );
+
+    // Relatório para Admin
+    sendAdminReport('Novo Cliente Cadastrado', `O cliente ${newClient.name} (${newClient.company}) foi adicionado ao sistema.`);
+  };
   const updateClient = (id: string, updates: any) => setClients(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
   const deleteClient = (id: string) => setClients(prev => prev.filter(c => c.id !== id));
 
@@ -131,7 +152,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   // Note Methods
   const addNote = (note: Omit<Note, 'id' | 'createdAt'>) => {
-    setNotes(prev => [...prev, { ...note, id: uuidv4(), createdAt: new Date() }]);
+    const newNote = { ...note, id: uuidv4(), createdAt: new Date() };
+    setNotes(prev => [...prev, newNote]);
+
+    // Relatório para Admin (Anotações internas também são monitoradas)
+    sendAdminReport('Nova Anotação Criada', `Uma nova anotação intitulada "${newNote.title}" foi criada no sistema.`);
   };
 
   const deleteNote = (id: string) => {

@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Project, statusLabels, statusColors, priorityLabels, priorityColors, ProjectStatus, ProjectPriority } from '../types';
-import { useGmail } from '../hooks/useGmail';
+import { useGmail } from '../context/GmailContext';
 
 interface ProjectFormData {
   title: string;

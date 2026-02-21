@@ -31,6 +31,13 @@ O **Gestão de Projetos** é um sistema completo e moderno desenvolvido para pro
 *   **Gestão de Usuários:** Ative/desative contas e controle níveis de acesso.
 *   **Métricas de Desempenho:** Uptime, tempo online e logs de atividades.
 
+### 📧 Automação de E-mails (Gmail API)
+*   **Integração Google OAuth2:** Autenticação segura para envio de e-mails via conta Gmail.
+*   **Boas-vindas Automatizadas:** Novos usuários recebem confirmação imediata por e-mail.
+*   **Notificações de Clientes:** Envio automático de boas-vindas para novos clientes.
+*   **Relatórios Administrativos:** Administradores recebem alertas de atividades críticas por e-mail.
+*   **Status de Projeto:** Notifique clientes sobre progresso de projetos com um clique.
+
 ---
 
 ## 🎨 Design System

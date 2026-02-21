@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
+import { GmailProvider } from './context/GmailContext';
 import { Login } from './components/Login';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
@@ -52,10 +53,12 @@ function AppContent() {
 
 export function App() {
   return (
-    <AuthProvider>
-      <DataProvider>
-        <AppContent />
-      </DataProvider>
-    </AuthProvider>
+    <GmailProvider>
+      <AuthProvider>
+        <DataProvider>
+          <AppContent />
+        </DataProvider>
+      </AuthProvider>
+    </GmailProvider>
   );
 }
