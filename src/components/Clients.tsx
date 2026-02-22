@@ -64,11 +64,14 @@ export function Clients() {
       company: client.company || ''
     });
     setEditingId(client.id);
+    setError('');
     setShowModal(true);
   };
 
+  const [error, setError] = useState('');
+
   const handleDelete = (id: string) => {
-    if (confirm('Tem certeza? Isso excluirá todos os projetos deste cliente.')) {
+    if (confirm('Atenção: A exclusão de um cliente eliminará permanentemente todos os registros vinculados. Continuar?')) {
       deleteClient(id);
     }
   };
@@ -86,181 +89,192 @@ export function Clients() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <div className="relative flex-1 max-w-md w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+    <div className="space-y-10 animate-fade-in">
+      {/* Header Strategico */}
+      <div className="flex flex-col lg:flex-row gap-8 justify-between items-center bg-zinc-950/30 p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+        <div className="flex-1 w-full max-w-xl relative group">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-violet-500 transition-colors" size={24} />
           <input
             type="text"
-            placeholder="Buscar clientes por nome ou empresa..."
+            placeholder="Rastrear clientes por nome ou entidade corporativa..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="premium-input pl-10!"
+            className="premium-input w-full h-16 pl-16! text-base tracking-tight placeholder:text-zinc-700 bg-black!"
           />
         </div>
         <button
           onClick={() => {
             setFormData(emptyForm);
             setEditingId(null);
+            setError('');
             setShowModal(true);
           }}
-          className="premium-button w-full sm:w-auto"
+          className="premium-button w-full lg:w-auto h-16 px-10 rounded-2xl group"
         >
-          <Plus size={20} />
-          <span>Cadastrar Cliente</span>
+          <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:rotate-90 transition-transform">
+            <Plus size={22} />
+          </div>
+          <span className="text-sm font-black tracking-widest uppercase">Expandir Base de Dados</span>
         </button>
       </div>
 
       {/* Clients Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredClients.map(client => (
-          <div key={client.id} className="premium-card group border-white/5 hover:border-violet-500/30">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-xl group-hover:scale-110 transition-transform">
-                  {getInitials(client.name)}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-bold text-white truncate text-lg group-hover:text-violet-400 transition-colors">{client.name}</h3>
-                  {client.company && (
-                    <p className="text-xs text-zinc-500 font-medium flex items-center gap-1.5 mt-0.5">
-                      <Building2 size={12} className="text-violet-500" />
-                      {client.company}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => handleEdit(client)}
-                  className="p-2 hover:bg-white/10 rounded-xl text-zinc-500 hover:text-white transition-all border border-transparent hover:border-white/10"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button
-                  onClick={() => handleDelete(client.id)}
-                  className="p-2 hover:bg-red-500/10 rounded-xl text-zinc-500 hover:text-red-500 transition-all border border-transparent hover:border-red-500/20"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
+          <div key={client.id} className="premium-card p-1 relative overflow-hidden group border-white/5">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-violet-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-            <div className="space-y-3 mb-6 bg-white/5 p-4 rounded-2xl border border-white/5">
-              <a
-                href={`mailto:${client.email}`}
-                className="flex items-center gap-3 text-xs font-semibold text-zinc-400 hover:text-violet-400 transition-colors"
-              >
-                <Mail size={16} className="text-violet-500" />
-                {client.email}
-              </a>
-              <a
-                href={`tel:${client.phone}`}
-                className="flex items-center gap-3 text-xs font-semibold text-zinc-400 hover:text-violet-400 transition-colors"
-              >
-                <Phone size={16} className="text-violet-500" />
-                {client.phone}
-              </a>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-white/5">
-              <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-tighter">
-                <FolderKanban size={14} className="text-blue-500" />
-                {getClientProjectCount(client.id)} projetos ativos
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-8">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 bg-zinc-900 border border-white/10 rounded-[1.25rem] flex items-center justify-center text-white font-black text-xl shadow-2xl group-hover:border-violet-500/30 transition-all">
+                    {getInitials(client.name)}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-black text-white truncate text-xl tracking-tighter group-hover:text-violet-400 transition-colors mb-1">{client.name}</h3>
+                    {client.company && (
+                      <div className="flex items-center gap-2 text-zinc-500 font-bold uppercase tracking-widest text-[10px]">
+                        <Building2 size={12} className="text-violet-500 opacity-50" />
+                        <span className="truncate max-w-[120px]">{client.company}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(client)}
+                    className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-zinc-500 hover:text-white transition-all border border-white/5"
+                    title="Modificar"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(client.id)}
+                    className="p-3 bg-red-500/5 hover:bg-red-500/20 rounded-xl text-zinc-600 hover:text-red-500 transition-all border border-red-500/10"
+                    title="Eliminar"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
-              <span className="text-[10px] text-zinc-600 font-bold uppercase">
-                Desde {formatDate(client.createdAt)}
-              </span>
+
+              <div className="space-y-4 mb-8 bg-black/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
+                <div className="flex items-center gap-4 text-xs font-bold text-zinc-400">
+                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                    <Mail size={14} className="text-violet-500" />
+                  </div>
+                  <span className="truncate">{client.email}</span>
+                </div>
+                <div className="flex items-center gap-4 text-xs font-bold text-zinc-400">
+                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                    <Phone size={14} className="text-violet-500" />
+                  </div>
+                  <span>{client.phone}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                <div className="flex items-center gap-3 px-4 py-2 bg-blue-500/5 border border-blue-500/10 rounded-full text-[10px] font-black text-blue-400 uppercase tracking-widest">
+                  <FolderKanban size={14} />
+                  {getClientProjectCount(client.id)} Projetos
+                </div>
+                <span className="text-[10px] text-zinc-600 font-extrabold uppercase tracking-widest">
+                  ID: {client.id.substring(0, 8)}
+                </span>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
       {filteredClients.length === 0 && (
-        <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
-          <User size={64} className="mx-auto mb-4 text-zinc-800" />
-          <p className="text-zinc-500 font-medium font-bold uppercase tracking-widest text-xs">Nenhum cliente na base de dados.</p>
+        <div className="text-center py-32 bg-zinc-950/20 rounded-[3rem] border-2 border-dashed border-white/5">
+          <User size={80} className="mx-auto mb-6 text-zinc-800 opacity-20" />
+          <p className="text-zinc-600 font-black uppercase tracking-[0.3em] text-xs">Vácuo Identificado: Nenhum integrante na rede.</p>
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal Strategico */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 backdrop-blur-md">
-          <div className="premium-card w-full max-w-md shadow-2xl p-0 border-white/10 overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-white/5 bg-zinc-950">
-              <h3 className="text-xl font-bold text-white">
-                {editingId ? 'Refinar Cadastro' : 'Novo Cliente'}
-              </h3>
+        <div className="fixed inset-0 bg-black/98 flex items-center justify-center z-50 p-4 backdrop-blur-xl">
+          <div className="premium-card w-full max-w-lg shadow-[0_0_100px_rgba(0,0,0,0.8)] p-0 border-white/10 overflow-hidden rounded-[2.5rem]">
+            <div className="flex items-center justify-between p-8 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Elite Protocol</span>
+                <h3 className="text-2xl font-black text-white tracking-tighter uppercase">
+                  {editingId ? 'Refinar Cadastro' : 'Novo Integrante'}
+                </h3>
+              </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-zinc-400 hover:text-white"
+                className="p-3 hover:bg-white/10 rounded-2xl transition-all text-zinc-400 hover:text-white border border-white/5"
               >
-                <X size={24} />
+                <X size={28} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-8 space-y-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Nome Completo</label>
+            <form onSubmit={handleSubmit} className="p-10 space-y-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Designação / Nome</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="premium-input"
-                  placeholder="Ex: João Silva"
+                  className="premium-input h-14 bg-black!"
+                  placeholder="Nome do cliente"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Endereço de Email</label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="premium-input"
-                  placeholder="cliente@exemplo.com"
-                />
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">E-mail de Contato</label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="premium-input h-14 bg-black!"
+                    placeholder="ex@elite.com"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Telefone Principal</label>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="premium-input h-14 bg-black!"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Telefone de Contato</label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="premium-input"
-                  placeholder="(00) 00000-0000"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Empresa / Negócio</label>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Organização / Empresa</label>
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="premium-input"
-                  placeholder="Nome da corporação (opcional)"
+                  className="premium-input h-14 bg-black!"
+                  placeholder="Designação corporativa (opcional)"
                 />
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex gap-4 pt-6">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-zinc-400 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                  className="flex-1 h-14 rounded-2xl border border-white/5 text-zinc-500 hover:text-white hover:bg-white/5 transition-all font-black uppercase tracking-widest text-[10px]"
                 >
-                  Voltar
+                  Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="premium-button flex-1"
+                  className="premium-button flex-1 h-14 rounded-2xl"
                 >
-                  {editingId ? 'Salvar Dados' : 'Efetuar Cadastro'}
+                  <span className="text-xs">{editingId ? 'Confirmar Mudanças' : 'Solidificar Cadastro'}</span>
                 </button>
               </div>
             </form>

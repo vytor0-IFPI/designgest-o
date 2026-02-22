@@ -41,9 +41,9 @@ function GmailStatus() {
 
   if (isConnected) {
     return (
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-xs font-semibold animate-fade-in shadow-sm">
-        <Check size={14} />
-        <span className="hidden sm:inline">Gmail Conectado</span>
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-[10px] font-black uppercase tracking-widest animate-fade-in shadow-sm">
+        <Check size={12} />
+        <span className="hidden sm:inline">Conectado</span>
       </div>
     );
   }
@@ -51,9 +51,9 @@ function GmailStatus() {
   return (
     <button
       onClick={login}
-      className="flex items-center gap-2 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold rounded-full transition-all shadow-md active:scale-95"
+      className="flex items-center gap-2 px-3 py-1.5 bg-violet-600/10 hover:bg-violet-600 border border-violet-500/20 text-violet-400 hover:text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all active:scale-95"
     >
-      <Mail size={14} />
+      <Mail size={12} />
       <span>Conectar Gmail</span>
     </button>
   );
@@ -73,32 +73,32 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white selection:bg-violet-500/30">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/70 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/80 z-40 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-violet-900 to-indigo-900 z-50 transform transition-transform duration-300 lg:translate-x-0",
+        "fixed top-0 left-0 h-full w-64 bg-zinc-950 border-r border-white/5 z-50 transform transition-transform duration-300 lg:translate-x-0 shadow-2xl",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-6 h-full flex flex-col">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <div className="flex items-center gap-4 mb-10 pl-2">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-violet-900/20">
               <Palette className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg">Gestão de Projetos</h1>
-              <p className="text-violet-300 text-xs text-nowrap">Gestão Eficiente</p>
+              <h1 className="text-white font-black text-sm tracking-tighter uppercase mb-0.5">Elite Design</h1>
+              <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">Flow Systems</p>
             </div>
           </div>
 
-          <nav className="space-y-2 flex-1">
+          <nav className="space-y-1.5 flex-1">
             {filteredNavItems.map(item => (
               <button
                 key={item.page}
@@ -107,16 +107,21 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                   setSidebarOpen(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left",
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 text-left group",
                   currentPage === item.page
-                    ? "bg-white/20 text-white shadow-lg"
-                    : "text-violet-200 hover:bg-white/10 hover:text-white"
+                    ? "bg-violet-600/10 text-violet-400 border border-violet-500/20 shadow-[0_0_20px_rgba(124,58,237,0.05)]"
+                    : "text-zinc-500 hover:bg-white/[0.03] hover:text-zinc-200 border border-transparent"
                 )}
               >
-                {item.icon}
-                <span className="font-medium">{item.label}</span>
+                <div className={cn(
+                  "transition-transform duration-300 group-hover:scale-110",
+                  currentPage === item.page ? "text-violet-500" : "text-zinc-600"
+                )}>
+                  {item.icon}
+                </div>
+                <span className="font-bold text-sm tracking-tight">{item.label}</span>
                 {item.adminOnly && (
-                  <span className="ml-auto text-[10px] bg-amber-500/30 text-amber-200 px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter">
+                  <span className="ml-auto text-[8px] bg-amber-500/10 text-amber-500 border border-amber-500/20 px-2.5 py-1 rounded-lg uppercase font-black tracking-widest leading-none">
                     Adm
                   </span>
                 )}
@@ -125,14 +130,17 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
           </nav>
 
           {/* User Info Bottom */}
-          <div className="mt-auto pt-6 border-t border-white/10">
-            <div className="flex items-center gap-3 p-2">
-              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white text-xs font-bold">
+          <div className="mt-auto pt-6 border-t border-white/5">
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className={cn(
+                "w-9 h-9 rounded-xl flex items-center justify-center text-white text-[10px] font-black shadow-lg",
+                user?.role === 'admin' ? "bg-amber-600" : "bg-violet-600"
+              )}>
                 {user ? getInitials(user.name) : '??'}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-                <p className="text-[10px] text-violet-300/60 uppercase">{user?.role}</p>
+                <p className="text-xs font-bold text-white truncate uppercase tracking-tighter">{user?.name}</p>
+                <p className="text-[9px] text-zinc-600 font-extrabold uppercase tracking-widest">{user?.role}</p>
               </div>
             </div>
           </div>
@@ -140,49 +148,52 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className="lg:ml-64 bg-black min-h-screen">
         {/* Header */}
-        <header className="bg-black border-b border-zinc-800 sticky top-0 z-30">
-          <div className="flex items-center justify-between px-4 py-4 lg:px-8">
+        <header className="bg-black/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-30">
+          <div className="flex items-center justify-between px-4 py-4 lg:px-10 h-20">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 hover:bg-zinc-900 rounded-lg text-white"
+                className="lg:hidden p-2.5 hover:bg-zinc-900 rounded-xl text-zinc-400 transition-colors border border-white/5"
               >
-                <Menu size={24} />
+                <Menu size={22} />
               </button>
 
-              <div>
-                <h2 className="text-lg font-semibold text-white capitalize">
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-0.5">Sistemas Elite</span>
+                <h2 className="text-xl font-black text-white tracking-tighter uppercase">
                   {filteredNavItems.find(i => i.page === currentPage)?.label}
                 </h2>
               </div>
             </div>
 
             {/* Gmail Connection & User Menu */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <GmailStatus />
+
+              <div className="h-8 w-[1px] bg-white/5 hidden sm:block mx-1" />
 
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-3 p-2 hover:bg-zinc-900 rounded-xl transition-colors"
+                  className="flex items-center gap-3 p-1.5 hover:bg-white/[0.03] rounded-2xl transition-all group border border-transparent hover:border-white/5"
                 >
                   <div className={cn(
-                    "w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm",
+                    "w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-xl transition-transform group-hover:scale-105",
                     user?.role === 'admin'
-                      ? "bg-gradient-to-br from-amber-500 to-orange-600"
-                      : "bg-gradient-to-br from-violet-500 to-indigo-600"
+                      ? "bg-gradient-to-br from-amber-500 to-orange-700"
+                      : "bg-gradient-to-br from-violet-600 to-indigo-800"
                   )}>
                     {user ? getInitials(user.name) : <UserCircle size={20} />}
                   </div>
-                  <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-white">{user?.name}</p>
-                    <p className="text-xs text-zinc-400">
-                      {user?.role === 'admin' ? 'Administrador' : 'Usuário'}
+                  <div className="hidden sm:block text-left mr-1">
+                    <p className="text-sm font-bold text-white tracking-tight">{user?.name}</p>
+                    <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">
+                      {user?.role === 'admin' ? 'Acesso Master' : 'Integrante'}
                     </p>
                   </div>
-                  <ChevronDown size={16} className="text-zinc-500 hidden sm:block" />
+                  <ChevronDown size={14} className={cn("text-zinc-600 transition-transform duration-300", userMenuOpen && "rotate-180")} />
                 </button>
 
                 {userMenuOpen && (
@@ -191,22 +202,35 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                       className="fixed inset-0 z-40"
                       onClick={() => setUserMenuOpen(false)}
                     />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 rounded-xl shadow-xl border border-zinc-800 z-50 overflow-hidden">
-                      <div className="p-4 border-b border-zinc-800">
-                        <p className="font-medium text-white">{user?.name}</p>
-                        <p className="text-sm text-zinc-400">@{user?.username}</p>
-                        <p className="text-xs text-zinc-500 mt-1">{user?.email}</p>
+                    <div className="absolute right-0 top-full mt-3 w-64 bg-zinc-950 rounded-2xl shadow-2xl border border-white/10 z-50 overflow-hidden animate-fade-in py-2">
+                      <div className="px-5 py-4 border-b border-white/5 mb-2">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white font-black">
+                            {user ? getInitials(user.name) : <UserCircle size={20} />}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-white text-sm truncate uppercase tracking-tighter">{user?.name}</p>
+                            <p className="text-xs text-zinc-500 font-medium truncate">@{user?.username}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-bold bg-white/[0.03] p-2 rounded-lg border border-white/5">
+                          <Mail size={12} className="text-violet-500" />
+                          {user?.email}
+                        </div>
                       </div>
-                      <div className="p-2">
+
+                      <div className="px-2">
                         <button
                           onClick={() => {
                             logout();
                             setUserMenuOpen(false);
                           }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-500 hover:bg-red-500/10 rounded-xl transition-all group"
                         >
-                          <LogOut size={18} />
-                          <span className="font-medium">Sair</span>
+                          <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500/20 transition-colors">
+                            <LogOut size={16} />
+                          </div>
+                          <span className="font-black text-xs uppercase tracking-widest">Encerrar Sessão</span>
                         </button>
                       </div>
                     </div>
@@ -214,21 +238,20 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                 )}
               </div>
 
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className={cn(
-                  "lg:hidden p-2 hover:bg-zinc-900 rounded-lg text-white",
-                  !sidebarOpen && "invisible"
-                )}
-              >
-                <X size={24} />
-              </button>
+              {sidebarOpen && (
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="lg:hidden p-2.5 hover:bg-zinc-900 rounded-xl text-white transition-colors border border-white/5"
+                >
+                  <X size={22} />
+                </button>
+              )}
             </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8 bg-black min-h-[calc(100vh-73px)]">
+        <main className="p-6 lg:p-12 bg-black min-h-[calc(100vh-80px)]">
           {children}
         </main>
       </div>
