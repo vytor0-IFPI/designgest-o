@@ -1,10 +1,21 @@
 /// <reference types="vite/client" />
 
+import * as ReactNamespace from 'react';
+
+declare global {
+    namespace React {
+        type ReactNode = any;
+        type FC<P = {}> = any;
+        type ReactElement = any;
+        type FormEvent<T = Element> = any;
+    }
+}
+
 declare module 'react' {
     export const StrictMode: any;
     export function createContext<T>(defaultValue: T): any;
     export function useContext<T>(context: any): T;
-    export function useState<S>(initialState: S | (() => S)): [S, (val: S) => void];
+    export function useState<S>(initialState: S | (() => S)): [S, (val: S | ((prev: S) => S)) => void];
     export function useEffect(effect: any, deps?: any[]): void;
     export function useMemo<T>(factory: () => T, deps: any[]): T;
     export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: any[]): T;
@@ -15,11 +26,6 @@ declare module 'react' {
     export type FormEvent<T = Element> = any;
     const React: any;
     export default React;
-}
-
-declare namespace React {
-    type ReactNode = any;
-    type FormEvent<T = Element> = any;
 }
 
 declare module 'react/jsx-runtime' {
