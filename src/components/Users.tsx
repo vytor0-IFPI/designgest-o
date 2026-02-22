@@ -123,7 +123,7 @@ export function Users() {
         <div className="text-center premium-card p-12 max-w-sm">
           <AlertTriangle size={64} className="mx-auto mb-6 text-amber-500 animate-pulse" />
           <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">Acesso Restrito</h2>
-          <p className="text-zinc-500 font-medium">Apenas administradores master podem gerenciar o ecossistema de usuários.</p>
+          <p className="text-zinc-500 font-medium">Apenas administradores podem gerenciar o sistema de usuários.</p>
         </div>
       </div>
     );
@@ -153,7 +153,7 @@ export function Users() {
           className="premium-button w-full sm:w-auto"
         >
           <Plus size={20} />
-          <span>Novo Integrante</span>
+          <span>Novo Usuário</span>
         </button>
       </div>
 
@@ -209,7 +209,7 @@ export function Users() {
                         : "bg-zinc-500/10 text-zinc-500 border-zinc-500/20"
                     )}>
                       {u.role === 'admin' ? <ShieldCheck size={12} /> : <Shield size={12} />}
-                      {u.role === 'admin' ? 'Master' : 'Membro'}
+                      {u.role === 'admin' ? 'Administrador' : 'Membro'}
                     </span>
                   </td>
                   <td className="py-5 px-6 text-zinc-600 font-bold text-[10px] uppercase tracking-tighter hidden lg:table-cell">
@@ -275,7 +275,7 @@ export function Users() {
           <div className="premium-card w-full max-w-md shadow-2xl p-0 border-white/10 overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-white/5 bg-zinc-950">
               <h3 className="text-xl font-bold text-white">
-                {editingId ? 'Refinar Perfil' : 'Novo Integrante'}
+                {editingId ? 'Refinar Perfil' : 'Novo Usuário'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -313,7 +313,7 @@ export function Users() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="premium-input"
-                  placeholder="email@elite.com"
+                  placeholder="contato@email.com"
                 />
               </div>
 
@@ -379,7 +379,7 @@ export function Users() {
                     )}
                   >
                     <ShieldCheck size={20} className={formData.role === 'admin' ? "text-amber-400" : "opacity-30"} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Master</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Admin</span>
                   </button>
                 </div>
               </div>
@@ -396,7 +396,7 @@ export function Users() {
                   type="submit"
                   className="premium-button flex-1"
                 >
-                  {editingId ? 'Salvar Modificações' : 'Ingressar Membro'}
+                  {editingId ? 'Salvar Modificações' : 'Cadastrar Usuário'}
                 </button>
               </div>
             </form>

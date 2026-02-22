@@ -56,19 +56,19 @@ export function Login() {
       </div>
 
       <div className="relative z-10 w-full max-w-md animate-fade-in">
-        {/* Elite Branding */}
+        {/* Product Branding */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-gradient-to-br from-violet-600 to-indigo-800 rounded-3xl shadow-[0_0_50px_rgba(124,58,237,0.3)] border border-white/10 group hover:scale-110 transition-transform duration-500">
             <Palette className="text-white group-hover:rotate-12 transition-transform" size={40} />
           </div>
-          <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">ELITE DESIGN</h1>
-          <p className="text-zinc-500 font-bold uppercase tracking-[0.3em] text-[10px]">Gestão de Próxima Geração</p>
+          <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">GESTÃO DE PROJETOS</h1>
+          <p className="text-zinc-500 font-bold uppercase tracking-[0.3em] text-[10px]">Gestão Profissional</p>
         </div>
 
         {/* Auth Interface */}
         <div className="premium-card bg-zinc-950/40 backdrop-blur-xl border-white/5 p-8 shadow-2xl rounded-[2.5rem]">
           <h2 className="text-xl font-bold text-white mb-8 text-center tracking-tight">
-            {isRegister ? 'Criar Identidade Elite' : 'Acesse seu Ecossistema'}
+            {isRegister ? 'Criar Nova Conta' : 'Acesse seu Painel'}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -100,7 +100,7 @@ export function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     className="premium-input bg-zinc-950/60!"
-                    placeholder="ex@elite.com"
+                    placeholder="contato@email.com"
                   />
                 </div>
               </>
@@ -114,7 +114,7 @@ export function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 className="premium-input bg-zinc-950/60!"
-                placeholder="seu_id_elite"
+                placeholder="seu_usuario"
               />
             </div>
 
@@ -172,7 +172,7 @@ export function Login() {
               ) : (
                 <>
                   <UserPlus size={16} className="group-hover:scale-125 transition-transform" />
-                  Não é membro? Junte-se à Elite
+                  Não é membro? Cadastre-se
                 </>
               )}
             </button>
@@ -192,7 +192,7 @@ export function Login() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] font-black text-white truncate uppercase tracking-tighter">{admin.name}</p>
-                    <p className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest">Admin Master</p>
+                    <p className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest">Administrador</p>
                   </div>
                 </div>
               ))}
@@ -201,7 +201,7 @@ export function Login() {
 
         {/* Copyright Footer */}
         <p className="text-center text-zinc-700 text-[10px] font-bold mt-10 uppercase tracking-[0.4em]">
-          © 2026 ELITE MS • Secured Protocol
+          © 2026 GESTOR DE PROJETOS • Secured Protocol
         </p>
       </div>
     </div>

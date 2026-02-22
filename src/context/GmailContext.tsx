@@ -45,14 +45,14 @@ export function GmailProvider({ children }: { children: ReactNode }) {
         const emailBody = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 20px; background-color: #ffffff; color: #1f2937;">
         <div style="text-align: center; margin-bottom: 25px; border-bottom: 2px solid #7c3aed; padding-bottom: 15px;">
-          <h1 style="color: #7c3aed; margin: 0; font-size: 24px;">Elite Design System</h1>
+          <h1 style="color: #7c3aed; margin: 0; font-size: 24px;">Gestão de Projetos</h1>
         </div>
         <div style="line-height: 1.6; font-size: 16px;">
             ${htmlContent}
         </div>
         <div style="margin-top: 30px; padding-top: 20px; border-t: 1px solid #eee; text-align: center;">
           <p style="font-size: 12px; color: #9ca3af;">
-            © 2026 Elite Management • Este é um e-mail automático.
+            © 2026 Gestão de Projetos • Este é um e-mail automático.
           </p>
         </div>
       </div>

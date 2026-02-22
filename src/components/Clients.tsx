@@ -199,7 +199,7 @@ export function Clients() {
           <div className="premium-card w-full max-w-lg shadow-[0_0_100px_rgba(0,0,0,0.8)] p-0 border-white/10 overflow-hidden rounded-[2.5rem]">
             <div className="flex items-center justify-between p-8 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md">
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Elite Protocol</span>
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Protocolo de Registro</span>
                 <h3 className="text-2xl font-black text-white tracking-tighter uppercase">
                   {editingId ? 'Refinar Cadastro' : 'Novo Integrante'}
                 </h3>
@@ -234,7 +234,7 @@ export function Clients() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="premium-input h-14 bg-black!"
-                    placeholder="ex@elite.com"
+                    placeholder="contato@email.com"
                   />
                 </div>
                 <div className="space-y-3">

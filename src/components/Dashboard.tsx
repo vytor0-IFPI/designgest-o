@@ -66,11 +66,15 @@ export function Dashboard() {
           <div className="grid grid-cols-2 gap-2 mt-2">
             <div>
               <p className="text-xl font-bold text-white">{stats.totalClients}</p>
-              <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Clientes</p>
+              <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">
+                {stats.totalClients === 1 ? 'Cliente' : 'Clientes'}
+              </p>
             </div>
             <div className="border-l border-white/5 pl-2">
               <p className="text-xl font-bold text-white">{stats.totalUsers}</p>
-              <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Usuários</p>
+              <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">
+                {stats.totalUsers === 1 ? 'Usuário' : 'Usuários'}
+              </p>
             </div>
           </div>
         </div>
@@ -81,7 +85,7 @@ export function Dashboard() {
               <FolderKanban className="text-blue-400" size={24} />
             </div>
             <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full uppercase">
-              {stats.inProgress} ativos
+              {stats.inProgress} {stats.inProgress === 1 ? 'ativo' : 'ativos'}
             </span>
           </div>
           <p className="text-2xl font-bold text-white">{stats.totalProjects}</p>

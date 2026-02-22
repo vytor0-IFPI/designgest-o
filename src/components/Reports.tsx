@@ -10,7 +10,7 @@ export function Reports() {
         { id: '1', user: users[1]?.name || 'Usuario', action: 'Criou um novo cliente', target: 'Empresa X', time: '10 min atrás', type: 'create' },
         { id: '2', user: users[0]?.name || 'Admin Master', action: 'Atualizou status do projeto', target: 'Logo Design Flow', time: '1 hora atrás', type: 'update' },
         { id: '3', user: users[1]?.name || 'Usuario', action: 'Adicionou tarefa ao projeto', target: 'Identidade Visual', time: '3 horas atrás', type: 'create' },
-        { id: '4', user: 'Sistema Elite', action: 'Backup automático realizado', target: 'Nuvem Segura', time: '5 horas atrás', type: 'system' },
+        { id: '4', user: 'Sistema Interno', action: 'Backup automático realizado', target: 'Nuvem Segura', time: '5 horas atrás', type: 'system' },
         { id: '5', user: users[1]?.name || 'Usuario', action: 'Excluiu rascunho de projeto', target: 'Projeto Antigo', time: 'ontem', type: 'delete' },
     ];
 

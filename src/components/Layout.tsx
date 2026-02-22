@@ -101,8 +101,8 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
               <Palette className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-white font-black text-sm tracking-tighter uppercase mb-0.5">Elite Design</h1>
-              <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">Flow Systems</p>
+              <h1 className="text-white font-black text-sm tracking-tighter uppercase mb-0.5">Gestão de Projetos</h1>
+              <p className="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">Sistemas de Gestão</p>
             </div>
           </div>
 
@@ -169,7 +169,7 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
               </button>
 
               <div className="flex flex-col">
-                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-0.5">Sistemas Elite</span>
+                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-0.5">Gestão de Projetos</span>
                 <h2 className="text-xl font-black text-white tracking-tighter uppercase">
                   {filteredNavItems.find(i => i.page === currentPage)?.label}
                 </h2>
@@ -198,7 +198,7 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                   <div className="hidden sm:block text-left mr-1">
                     <p className="text-sm font-bold text-white tracking-tight">{user?.name}</p>
                     <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">
-                      {user?.role === 'admin' ? 'Acesso Master' : 'Integrante'}
+                      {user?.role === 'admin' ? 'Administrador' : 'Colaborador'}
                     </p>
                   </div>
                   <ChevronDown size={14} className={cn("text-zinc-600 transition-transform duration-300", userMenuOpen && "rotate-180")} />

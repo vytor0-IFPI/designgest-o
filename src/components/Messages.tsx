@@ -117,6 +117,7 @@ export function Messages({ selectedProjectId, onSelectProject }: MessagesProps) 
 
   return (
     <div className="bg-zinc-950/40 rounded-[2.5rem] shadow-2xl border border-white/5 overflow-hidden h-[calc(100vh-10rem)] backdrop-blur-xl animate-fade-in">
+
       <div className="flex h-full">
         {/* Contacts List */}
         <div className={cn(
@@ -264,7 +265,7 @@ export function Messages({ selectedProjectId, onSelectProject }: MessagesProps) 
               {/* WhatsApp Info Banner */}
               <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 text-center mb-8 backdrop-blur-sm">
                 <p className="text-xs text-amber-500 font-bold uppercase tracking-widest leading-relaxed">
-                  🛡️ PROTOCOLO DE SIMULAÇÃO ATIVO • INTEGRADO VIA ELITE CLOUD
+                  🛡️ PROTOCOLO DE SIMULAÇÃO ATIVO • INTEGRADO VIA SISTEMA DE GESTÃO
                 </p>
               </div>
 
@@ -365,7 +366,7 @@ export function Messages({ selectedProjectId, onSelectProject }: MessagesProps) 
                   <span className="text-[10px] font-black uppercase tracking-widest">Servidor Operacional</span>
                 </div>
                 <p className="text-xs text-zinc-500 font-medium leading-relaxed">
-                  🛡️ Esta interface simula a integração com a API Business do WhatsApp. Todas as mensagens são criptografadas via Elite Protocol.
+                  🛡️ Esta interface simula a integração com a API Business do WhatsApp. Todas as mensagens são criptografadas via Protocolo de Segurança.
                 </p>
               </div>
             </div>
