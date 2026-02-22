@@ -87,7 +87,15 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
         "fixed top-0 left-0 h-full w-64 bg-zinc-950 border-r border-white/5 z-50 transform transition-transform duration-300 lg:translate-x-0 shadow-2xl",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 h-full flex flex-col">
+        <div className="p-6 h-full flex flex-col relative">
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden absolute top-4 right-4 p-2 hover:bg-white/5 rounded-xl text-zinc-500 transition-colors"
+          >
+            <X size={20} />
+          </button>
+
           <div className="flex items-center gap-4 mb-10 pl-2">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-violet-900/20">
               <Palette className="text-white" size={24} />
@@ -237,15 +245,6 @@ export function Layout({ children, currentPage, onNavigate }: LayoutProps) {
                   </>
                 )}
               </div>
-
-              {sidebarOpen && (
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="lg:hidden p-2.5 hover:bg-zinc-900 rounded-xl text-white transition-colors border border-white/5"
-                >
-                  <X size={22} />
-                </button>
-              )}
             </div>
           </div>
         </header>

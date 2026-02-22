@@ -93,6 +93,15 @@ declare module 'lucide-react' {
     export const AlertTriangle: any;
     export const Activity: any;
     export const Download: any;
+    export const Send: any;
+    export const Video: any;
+    export const Smile: any;
+    export const Paperclip: any;
+    export const CheckCheck: any;
+    export const Wifi: any;
+    export const WifiOff: any;
+    export const RefreshCw: any;
+    export const Projector: any;
 }
 
 declare module '@react-oauth/google' {

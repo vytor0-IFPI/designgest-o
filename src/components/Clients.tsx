@@ -33,6 +33,7 @@ export function Clients() {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ClientFormData>(emptyForm);
+  const [error, setError] = useState('');
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,8 +68,6 @@ export function Clients() {
     setError('');
     setShowModal(true);
   };
-
-  const [error, setError] = useState('');
 
   const handleDelete = (id: string) => {
     if (confirm('Atenção: A exclusão de um cliente eliminará permanentemente todos os registros vinculados. Continuar?')) {

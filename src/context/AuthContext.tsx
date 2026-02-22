@@ -116,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         <p style="font-size: 14px; color: #a1a1aa;">Se não foi você, recomendamos alterar sua senha imediatamente para garantir a segurança dos seus dados.</p>
       </div>
       `
-    ).then(res => {
+    ).then((res: { success: boolean, error?: string }) => {
       if (!res.success) console.warn('Alerta de login não enviado:', res.error);
     });
 
@@ -143,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isActive: true
     };
 
-    setUsers(prev => [...prev, userToAdd]);
+    setUsers((prev: User[]) => [...prev, userToAdd]);
     cloudSync.upsert('users', userToAdd);
 
     sendNotification(
@@ -166,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUser = (id: string, updates: Partial<Omit<User, 'id' | 'createdAt'>>) => {
-    setUsers(prev => {
+    setUsers((prev: User[]) => {
       const updated = prev.map(u => u.id === id ? { ...u, ...updates } : u);
       const userToUpdate = updated.find(u => u.id === id);
       if (userToUpdate) cloudSync.upsert('users', userToUpdate);
@@ -174,7 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (user?.id === id) {
-      setUser(prev => prev ? { ...prev, ...updates } : null);
+      setUser((prev: User | null) => prev ? { ...prev, ...updates } : null);
     }
   };
 
@@ -188,7 +188,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, message: 'Não é possível excluir o último administrador' };
     }
 
-    setUsers(prev => prev.filter(u => u.id !== id));
+    setUsers((prev: User[]) => prev.filter(u => u.id !== id));
     cloudSync.delete('users', id);
     return { success: true, message: 'Usuário excluído com sucesso!' };
   };
@@ -201,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (activeAdmins.length === 0) return;
     }
 
-    setUsers(prev => {
+    setUsers((prev: User[]) => {
       const updated = prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u);
       const userToUpdate = updated.find(u => u.id === id);
       if (userToUpdate) cloudSync.upsert('users', userToUpdate);
