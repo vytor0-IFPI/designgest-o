@@ -1,17 +1,17 @@
-# 📊 Elite Management System - Gestão de Projetos
+# 📊 Gestão de Projetos - Sistema Profissional
 
 ![Banner](https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2426)
 
 ## 🚀 Sobre o Projeto
-O **Elite Management System** é uma plataforma ultra-moderna, com interface **Total Dark Mode**, projetada para profissionais que exigem o máximo de performance e estética. O sistema oferece isolamento completo de dados por usuário, sincronização em nuvem em tempo real e automação via Gmail.
+O **Sistema de Gestão de Projetos** é uma plataforma ultra-moderna, com interface **Total Dark Mode**, projetada para profissionais que exigem o máximo de performance e estética. O sistema oferece isolamento completo de dados por usuário, sincronização em nuvem em tempo real e automação via Gmail.
 
 🌐 **Acesse agora:** [https://vytor0-IFPI.github.io/designgest-o/](https://vytor0-IFPI.github.io/designgest-o/)
 
 ---
 
-## ✨ Funcionalidades Master
+## ✨ Funcionalidades Principais
 
-### 🌑 Elite Dark Mode (Total Dark)
+### 🌑 Dark Mode Profissional
 *   Interface 100% focada em tons de preto e camadas profundas.
 *   Design System baseado em Glassmorphism e gradientes violeta.
 *   Conforto visual extremo para longas jornadas de trabalho.
@@ -21,10 +21,10 @@ O **Elite Management System** é uma plataforma ultra-moderna, com interface **T
 *   **Segurança:** Clientes, projetos e tarefas de um usuário são invisíveis para outros.
 *   **Nuvem:** Sincronização automática via Supabase, garantindo que você tenha seus dados em qualquer dispositivo.
 
-### 📧 Gmail Automation Elite
+### 📧 Automação via Gmail
 *   **Conexão Rápida:** Botão direto no dashboard para autorizar sua conta Google.
 *   **Notificações Inteligentes:** Envio de boas-vindas para novos clientes.
-*   **Relatórios Adm:** Envio automático de logs de atividade para os administradores master.
+*   **Relatórios Adm:** Envio automático de logs de atividade para os administradores.
 
 ### 📊 Gestão Estruturada
 *   **Dashboard:** Métricas financeiras e de produtividade em tempo real.
@@ -55,12 +55,12 @@ create table notes (id uuid primary key, "userId" uuid, title text, content text
 ---
 
 ## 🛠️ Stack Tecnológica
-*   **React 18** + **Vite**
-*   **Tailwind CSS 4** (Configuração Elite Hybrid)
-*   **Supabase** (Realtime Database)
+*   **React 19** + **Vite**
+*   **Tailwind CSS 4**
+*   **Supabase** (Sincronização Cloud)
 *   **Gmail API** (Google OAuth2)
-*   **Lucide React** (Elite Icon Set)
+*   **Lucide React** (Pacote de Ícones)
 
 ---
 
-© 2026 Elite Management System. Desenvolvido para a Excelência.
+© 2026 Gestão de Projetos. Desenvolvido para a Eficiência Profissional.

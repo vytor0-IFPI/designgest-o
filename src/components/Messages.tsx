@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type FormEvent } from 'react';
 import {
   Send,
   Search,
@@ -48,7 +48,7 @@ export function Messages({ selectedProjectId, onSelectProject }: MessagesProps) 
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [selectedProject?.messages]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = (e: FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !selectedProjectId) return;
 
