@@ -7,11 +7,11 @@ export function Reports() {
 
     // Activities log
     const recentActivities = [
-        { id: '1', user: users[1]?.name || 'Usuario', action: 'Criou um novo cliente', target: 'Empresa X', time: '10 min atrás', type: 'create' },
-        { id: '2', user: users[0]?.name || 'Admin Master', action: 'Atualizou status do projeto', target: 'Logo Design Flow', time: '1 hora atrás', type: 'update' },
-        { id: '3', user: users[1]?.name || 'Usuario', action: 'Adicionou tarefa ao projeto', target: 'Identidade Visual', time: '3 horas atrás', type: 'create' },
+        { id: '1', user: users[1]?.name || 'Usuário', action: 'Criou um novo cliente', target: 'Empresa X', time: '10 min atrás', type: 'create' },
+        { id: '2', user: users[0]?.name || 'Administrador', action: 'Atualizou status do projeto', target: 'Logo do Projeto', time: '1 hora atrás', type: 'update' },
+        { id: '3', user: users[1]?.name || 'Usuário', action: 'Adicionou tarefa ao projeto', target: 'Identidade Visual', time: '3 horas atrás', type: 'create' },
         { id: '4', user: 'Sistema Interno', action: 'Backup automático realizado', target: 'Nuvem Segura', time: '5 horas atrás', type: 'system' },
-        { id: '5', user: users[1]?.name || 'Usuario', action: 'Excluiu rascunho de projeto', target: 'Projeto Antigo', time: 'ontem', type: 'delete' },
+        { id: '5', user: users[1]?.name || 'Usuário', action: 'Excluiu rascunho de projeto', target: 'Projeto Antigo', time: 'ontem', type: 'delete' },
     ];
 
     return (
@@ -20,7 +20,7 @@ export function Reports() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h2 className="text-3xl font-black text-white tracking-tight uppercase">Auditoria e Métricas</h2>
-                    <p className="text-zinc-500 font-medium">Análise em tempo real do ecossistema administrativo.</p>
+                    <p className="text-zinc-500 font-medium">Análise em tempo real do sistema administrativo.</p>
                 </div>
                 <button className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-zinc-300 hover:bg-white/10 hover:text-white transition-all font-bold uppercase tracking-widest text-[10px] group">
                     <Download size={18} className="group-hover:translate-y-0.5 transition-transform" />
@@ -93,7 +93,7 @@ export function Reports() {
                             <BarChart3 className="text-violet-500" size={24} />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-white tracking-tight">Monitoramento de Fluxo</h3>
+                            <h3 className="text-lg font-bold text-white tracking-tight">Monitoramento de Atividade</h3>
                             <p className="text-xs text-zinc-500 font-medium">Rastreamento granulado de todas as interações do sistema.</p>
                         </div>
                     </div>

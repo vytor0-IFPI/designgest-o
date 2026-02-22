@@ -12,8 +12,7 @@ import {
   MessageCircle,
   Wifi,
   WifiOff,
-  RefreshCw,
-  Projector
+  RefreshCw
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { statusLabels, statusColors } from '../types';

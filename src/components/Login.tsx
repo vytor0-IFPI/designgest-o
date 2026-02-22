@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Palette, Eye, EyeOff, LogIn, AlertCircle, UserPlus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -201,7 +201,7 @@ export function Login() {
 
         {/* Copyright Footer */}
         <p className="text-center text-zinc-700 text-[10px] font-bold mt-10 uppercase tracking-[0.4em]">
-          © 2026 GESTOR DE PROJETOS • Secured Protocol
+          © 2026 GESTÃO DE PROJETOS • Protocolo de Segurança
         </p>
       </div>
     </div>
