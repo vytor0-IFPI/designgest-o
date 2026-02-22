@@ -63,18 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return defaultUsers;
   });
 
-  const [user, setUser] = useState<User | null>(() => {
-    try {
-      const saved = sessionStorage.getItem(STORAGE_KEYS.session);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return { ...parsed, createdAt: new Date(parsed.createdAt) };
-      }
-    } catch (e) {
-      console.error("Erro ao carregar sessão:", e);
-    }
-    return null;
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   // Sync users from cloud on mount
   useEffect(() => {
@@ -96,13 +85,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
   }, [users]);
 
-  useEffect(() => {
-    if (user) {
-      sessionStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user));
-    } else {
-      sessionStorage.removeItem(STORAGE_KEYS.session);
-    }
-  }, [user]);
 
   const login = (username: string, password: string): { success: boolean; message: string } => {
     const foundUser = users.find(
